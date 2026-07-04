@@ -21,6 +21,7 @@ Read:
 - `.compound-engineering/config.local.yaml` if present.
 - `package.json`, task config, CI config, and existing `docs/plans/` conventions when relevant.
 - Existing private orchestration ledger if present.
+- `private-ledger.md` before deciding where state belongs.
 
 Determine:
 
@@ -40,11 +41,15 @@ Use `blocking-questions.md`. Ask one setup question at a time:
 4. Heartbeat cadence.
 5. PR shipping authority.
 
+If Final UAT is combined or hybrid and repo policy does not already define integration behavior, also ask Combined UAT Strategy.
+
 Do not create Intake/UAT threads until these policies are known, unless the user explicitly says to use defaults. If they say "use defaults", record the recommended option for each question.
 
 ## Phase 3: Create Threads
 
 Use Codex thread tools. If not loaded, search for them.
+
+If thread tools are unavailable, do not fake thread creation. Record setup as partial, store the missing capability in the ledger, and tell the user that Intake/UAT routing will stay in the Main Orchestrator until tools are available.
 
 Create or identify:
 
@@ -68,7 +73,7 @@ You are the UAT thread for this repo. Stay on local main. When the Main Orchestr
 
 ## Phase 4: Private Ledger
 
-Persist setup state privately. Prefer `.codex/orchestrator/state.json` only if local/ignored. Otherwise use:
+Read `private-ledger.md`. Persist setup state privately. Prefer `.codex/orchestrator/state.json` only if local/ignored. Otherwise use:
 
 ```text
 $CODEX_HOME/orchestrator-state/<repo-id>/state.json
@@ -79,11 +84,15 @@ Minimum state shape:
 ```json
 {
   "version": 1,
+  "repoId": "repo-hash",
   "repoRoot": "/abs/path",
   "repoName": "repo",
-  "mainThreadId": "thread-id",
-  "intakeThreadId": "thread-id",
-  "uatThreadId": "thread-id",
+  "updatedAt": "iso-8601",
+  "threads": {
+    "main": "thread-id",
+    "intake": "thread-id",
+    "uat": "thread-id"
+  },
   "policies": {
     "finalUat": "hybrid",
     "worktreeEnv": "repo-setup-script",
@@ -92,7 +101,9 @@ Minimum state shape:
     "mainHeartbeat": "10m",
     "shippingAuthority": "open-pr-notify-uat"
   },
-  "activeUnits": []
+  "automations": [],
+  "activeUnits": [],
+  "completedUnits": []
 }
 ```
 

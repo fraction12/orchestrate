@@ -12,6 +12,8 @@
 
 ## Source Order
 
+Read `private-ledger.md` and `automation-lifecycle.md` before reconstructing status.
+
 1. Private orchestration ledger.
 2. Active Codex threads for the repo.
 3. Active automations and heartbeats.
@@ -20,7 +22,7 @@
 6. Issue tracker state.
 7. Recent plans or campaign docs.
 
-If the ledger is missing or stale, reconstruct best effort and say which facts are inferred.
+If the ledger is missing or stale, reconstruct best effort and label each recovered fact.
 
 ## Status Shape
 
@@ -57,30 +59,35 @@ For a campaign:
 
 Use these labels:
 
-- Confirmed: directly verified from tool output or files.
+- Verified: directly checked against current tool output or files.
 - Worker-reported: stated by a worker but not yet checked.
 - Inferred: reconstructed from partial state.
-- Unknown: not available.
+- Stale: ledger or automation points to something outdated, missing, merged, closed, or no longer readable.
+- Missing: not available from any source checked.
 
-Never present worker-reported or inferred status as confirmed.
+Never present worker-reported, inferred, stale, or missing status as verified.
 
 ## Recovery Behavior
 
 When status reveals stale state:
 
-- If a worker heartbeat exists for a completed/canceled worker, delete it.
+- If a worker heartbeat exists for a completed/canceled worker, delete it only when cleanup policy allows; otherwise recommend deletion.
 - If a clean completed worktree remains after merge, ask or clean it according to policy.
 - If a PR is merged but local cleanup failed, verify remote state before retrying cleanup.
 - If a branch is conflicted, check whether it still has unique diff before spending time on conflict repair.
 - If UAT was not notified for a ready PR, notify the UAT thread with the PR packet.
+- If an automation points at a missing thread/branch/unit, mark it stale or orphaned and repair only when policy allows.
 
 ## Status Report Template
 
 ```text
 Orchestration status: <unit name>
 
-Confirmed:
+Verified:
 - <facts verified from ledger/git/PR/thread>
+
+Inferred/Stale/Missing:
+- <facts reconstructed or unavailable, with source checked>
 
 Active lanes:
 - <ticket>: <worker/thread>, <branch>, <PR/UAT/check state>, next action

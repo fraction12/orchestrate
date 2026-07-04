@@ -18,6 +18,8 @@
 
 Read private ledger first. If an active unit matches the prompt, resume it instead of starting a duplicate.
 
+Read `private-ledger.md` before creating or updating state. If the ledger is locked or stale, reconstruct status first and avoid launching duplicate workers.
+
 If no match exists, classify:
 
 - Single ticket: one issue, plan, PR-bound slice, or requirement.
@@ -35,6 +37,7 @@ Read repo instructions and existing orchestration contract:
 - Existing implementation-ready plan in `docs/plans/` if referenced.
 - Issue tracker ticket(s) if available.
 - Current branch, dirty state, active worktrees, active PRs, active threads, and automations.
+- Existing heartbeat automations and whether they match the ledger.
 
 Ready means:
 
@@ -88,6 +91,8 @@ Launch pattern:
 6. Create worker heartbeat if the work may continue beyond the current turn.
 7. Record thread id, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
 
+Before creating heartbeats, read `automation-lifecycle.md`. Reuse or update matching automations instead of creating duplicates.
+
 Do not make the worker hand-run setup as its first meaningful task when the orchestrator can prepare the worktree.
 
 Worker prompt must include:
@@ -136,6 +141,8 @@ Do not ship on worker self-review alone.
 
 Read `ce-subroutine-contract.md`. Use `ce-commit-push-pr` when the branch is ready and the user/policy permits shipping.
 
+Read `uat-merge-policy.md` before notifying UAT, creating integration branches, or merging any PR.
+
 Before PR:
 
 - Confirm branch base and changed files.
@@ -149,6 +156,7 @@ After PR:
 - Include PR URL, scope, verification evidence, visual/browser evidence when relevant, and suggested user checks.
 - Watch CI/checks when policy requires it.
 - Merge only under explicit policy.
+- For combined or hybrid UAT, decide whether this PR is individually testable, part of an integration branch, or waiting for final combined test. Record that state in the ledger.
 
 ## Phase 7: Cleanup
 
@@ -162,6 +170,8 @@ After merge, cancellation, or explicit deferral:
 - Keep branch cleanup separate unless user/policy explicitly says to delete local/remote branches.
 - Report remaining active state.
 
+For automations, read `automation-lifecycle.md` and delete only heartbeats whose unit/lane is truly complete, canceled, or deliberately parked.
+
 ## Unit-Specific Notes
 
 ### Single Ticket
@@ -171,6 +181,8 @@ Optimize for one clean PR or one small PR chain. Avoid creating a campaign doc u
 ### Ticket Set
 
 Track each ticket as a lane. Status should show ticket, plan, worker, branch, PR, UAT, blocker, and next action.
+
+For combined UAT, keep a separate integration lane in the ledger instead of overloading a work lane.
 
 ### Campaign
 

@@ -19,6 +19,12 @@ Recognize these commands and route immediately:
 
 If the user says "orchestrate this" without a slash command, treat it as `/orchestrate`.
 
+Normalize common aliases before routing:
+
+- `/ochestrate` or `/orchestrator:run` -> `/orchestrate`.
+- `/ochestrator:setup` -> `/orchestrator:setup`.
+- `/ochestrator:status` -> `/orchestrator:status`.
+
 ## Non-Negotiables
 
 - Use blocking questions as a first-class workflow gate. Do not start workers until required orchestration policy is known.
@@ -77,6 +83,7 @@ When running `/orchestrator:setup`:
 - Store thread ids and setup policy in a private ledger. Prefer `.codex/orchestrator/state.json` only when it is ignored/local; otherwise use `$CODEX_HOME/orchestrator-state/<repo-id>/state.json`.
 - Offer to create or update `ORCHESTRATOR.md`; do not require it.
 - Create no implementation worker during setup.
+- Use `references/private-ledger.md` for repo id derivation, safe local-vs-CODEX_HOME storage, locking, stale detection, and schema upgrades.
 
 Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `set_thread_archived`, and `automation_update`.
 
@@ -91,9 +98,11 @@ When running `/orchestrate`:
 - Build or update a private ledger entry before creating workers.
 - Launch workers only after branch, worktree, and env readiness are checked.
 - Create compact worker heartbeats and a main orchestrator heartbeat when work continues beyond the current turn.
+- Use `references/automation-lifecycle.md` for heartbeat naming, payload shape, update/delete behavior, and status recovery.
 - Require CE-style evidence from every worker handoff: behavior-change signal, tests inspected, tests added/changed/used unchanged, red failure or characterization evidence when applicable, verification run, and no-test exception reason when applicable.
 - Run `ce-code-review` or equivalent review subagents after implementation and before shipping. Use machine-readable review mode when available so the orchestrator can apply or route findings.
 - Use `ce-commit-push-pr` for shipping when the branch is ready.
+- Use `references/uat-merge-policy.md` before combined or hybrid UAT, integration branches, merge stacks, and cleanup.
 - Notify the UAT thread when a PR is ready for user validation.
 - Watch checks when policy requires it, then merge only under explicit user or setup policy.
 - Clean up after merge, cancellation, or deferral.
@@ -106,14 +115,18 @@ When running `/orchestrator:status`:
 - If no ledger exists, reconstruct from recent Codex threads, git worktrees, branches, PRs, issue tracker state, and automations.
 - Report by orchestration unit, not raw activity.
 - Include active workers, branches, worktrees, PRs, heartbeats, UAT state, blockers, verified evidence, skipped checks, and next action.
+- Label reconstructed facts as verified, inferred, stale, or missing. Do not present inferred state as verified.
 
 ## References
 
 - `references/blocking-questions.md` - required question discipline and menus.
 - `references/setup.md` - `/orchestrator:setup` wizard and private state.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
+- `references/private-ledger.md` - private state location, repo id, locking, stale detection, and schema upgrades.
+- `references/automation-lifecycle.md` - heartbeat automation names, payloads, lifecycle, and recovery.
 - `references/alignment-contract.md` - plan readiness, U-ID/R-ID traceability, and drift stop rules.
 - `references/evidence-and-review.md` - proof strategy, worker evidence fields, and review finding handling.
 - `references/ce-subroutine-contract.md` - how to invoke CE skills without losing orchestrator tail ownership.
+- `references/uat-merge-policy.md` - individual, combined, and hybrid UAT branch/merge behavior.
 - `references/status.md` - `/orchestrator:status` and recovery behavior.
 - `references/templates.md` - worker, heartbeat, UAT, and status templates.

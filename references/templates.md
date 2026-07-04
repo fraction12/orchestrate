@@ -8,6 +8,7 @@ Keep prompts compact. Point to durable context instead of copying whole transcri
 - Worker Implementation Prompt
 - Worker Heartbeat Prompt
 - Main Orchestrator Heartbeat Prompt
+- Automation Payload
 - UAT Notification
 - Linear/Issue Comment
 
@@ -93,6 +94,19 @@ Continue orchestrating <unit>.
 Read the private ledger and repo contract. Check active workers, PRs, UAT state, blockers, and heartbeats. Keep moving safe lanes. When a PR is ready, notify the UAT thread with PR URL, scope, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
 ```
 
+## Automation Payload
+
+```text
+Continue orchestrating <unit-id> for <repo>.
+
+Read:
+- private ledger: <location>
+- ORCHESTRATOR.md if present
+- active plan/issue: <path-or-id>
+
+Check thread, branch, PR, UAT, review, verification, blockers, cleanup, and automation state. Move only safe next actions. Ask one blocking question if policy is missing or a drift stop is hit. Update the ledger before finishing.
+```
+
 ## UAT Notification
 
 ```text
@@ -118,6 +132,7 @@ Known risks:
 
 Policy:
 - <individual/combined/hybrid UAT>
+- Combined strategy: <integration branch / temporary local merge stack / not applicable>
 - Merge authority: <policy>
 ```
 

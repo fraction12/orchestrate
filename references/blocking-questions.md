@@ -28,7 +28,7 @@ Question: "How should final UAT work for orchestrated work in this repo?"
 
 1. Hybrid UAT (recommended): individual PR UAT plus a final combined test when a set/campaign completes.
 2. Individual PR UAT: each PR is tested and accepted independently.
-3. Combined UAT only: merge work into one integration PR before user testing.
+3. Combined UAT only: assemble the set in one integration branch/PR or local merge stack before user testing.
 
 ### Worktree Environment Setup
 
@@ -105,3 +105,13 @@ Question: "How should UAT happen for this run?"
 1. Notify UAT thread for every ready PR.
 2. Notify UAT after all set/campaign PRs are ready.
 3. Skip UAT notification and report only in this thread.
+
+### Combined UAT Strategy
+
+Ask only when policy requires combined/hybrid UAT and the repo/setup does not define how branches should be combined.
+
+Question: "How should combined UAT be assembled for this run?"
+
+1. Integration branch PR (recommended): create a temporary UAT branch/PR from base and merge candidate heads in dependency order.
+2. Temporary local merge stack: combine branches locally for verification without pushing an integration PR.
+3. Sequential validation: test PRs individually and report that true combined UAT is not available for this run.
