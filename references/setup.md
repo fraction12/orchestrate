@@ -1,0 +1,106 @@
+# Setup
+
+`/orchestrator:setup` installs the repo's orchestration operating model. It must not start implementation work.
+
+## Phase 1: Inspect
+
+Read:
+
+- `AGENTS.md` or equivalent repo instruction files.
+- `ORCHESTRATOR.md` if present.
+- `.codex/environments/*` if present.
+- `.compound-engineering/config.local.yaml` if present.
+- `package.json`, task config, CI config, and existing `docs/plans/` conventions when relevant.
+- Existing private orchestration ledger if present.
+
+Determine:
+
+- Repo root and default branch.
+- Package manager and validation commands.
+- Whether worktree setup already exists.
+- Whether issue tracker tools are available.
+- Whether thread tools and automation tools are available.
+
+## Phase 2: Ask Required Questions
+
+Use `blocking-questions.md`. Ask one setup question at a time:
+
+1. Final UAT policy.
+2. Worktree environment setup.
+3. QA policy.
+4. Heartbeat cadence.
+5. PR shipping authority.
+
+Do not create Intake/UAT threads until these policies are known, unless the user explicitly says to use defaults. If they say "use defaults", record the recommended option for each question.
+
+## Phase 3: Create Threads
+
+Use Codex thread tools. If not loaded, search for them.
+
+Create or identify:
+
+- Main Orchestrator: current thread.
+- Intake Thread: local `main`, same repo, no worktree. Purpose: Linear/ticket requirements, `ce-brainstorm`, `ce-plan`, issue grooming.
+- UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
+
+Thread prompts must be compact.
+
+Intake thread seed:
+
+```text
+You are the Intake thread for this repo. Stay on local main. Own Linear/ticket requirement refinement, ce-brainstorm, and ce-plan. Do not implement code unless the Main Orchestrator explicitly asks. Keep requirements durable in issues or docs/plans and report readiness back to the Main Orchestrator.
+```
+
+UAT thread seed:
+
+```text
+You are the UAT thread for this repo. Stay on local main. When the Main Orchestrator sends a ready PR, inspect the PR scope, verification evidence, screenshots/browser notes when relevant, and produce a user-facing UAT checklist plus acceptance/blocker notes. Do not merge or edit implementation code unless explicitly asked.
+```
+
+## Phase 4: Private Ledger
+
+Persist setup state privately. Prefer `.codex/orchestrator/state.json` only if local/ignored. Otherwise use:
+
+```text
+$CODEX_HOME/orchestrator-state/<repo-id>/state.json
+```
+
+Minimum state shape:
+
+```json
+{
+  "version": 1,
+  "repoRoot": "/abs/path",
+  "repoName": "repo",
+  "mainThreadId": "thread-id",
+  "intakeThreadId": "thread-id",
+  "uatThreadId": "thread-id",
+  "policies": {
+    "finalUat": "hybrid",
+    "worktreeEnv": "repo-setup-script",
+    "qa": "standard",
+    "workerHeartbeat": "5m",
+    "mainHeartbeat": "10m",
+    "shippingAuthority": "open-pr-notify-uat"
+  },
+  "activeUnits": []
+}
+```
+
+Do not commit this ledger. Do not expose it in public docs.
+
+## Phase 5: Optional ORCHESTRATOR.md
+
+If no `ORCHESTRATOR.md` exists, offer to create one after setup. It should include repo-specific policy and link to durable docs, not local thread ids or private automation ids.
+
+If one exists, offer to update it only when setup decisions materially change repo policy.
+
+## Setup Completion Report
+
+Report:
+
+- Main, Intake, and UAT thread ids.
+- Policy decisions.
+- Ledger location.
+- Whether `ORCHESTRATOR.md` was created, updated, left unchanged, or skipped.
+- Any tools unavailable and the fallback used.
