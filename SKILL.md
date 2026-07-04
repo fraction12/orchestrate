@@ -29,6 +29,8 @@ If the user says "orchestrate this" without a slash command, treat it as `/orche
 - Keep private orchestration state private. Do not publish thread ids, heartbeat ids, internal blocker notes, or local env details in public docs or PR text unless the user explicitly wants that.
 - Treat worker claims as untrusted until checked against branch, diff, tests, PR metadata, CI, and visible behavior when relevant.
 - Do not merge, archive, delete worktrees, mark issues done, or stop heartbeats merely because a worker says it finished.
+- Carry plan alignment forward at every handoff. Every worker lane must know its source plan, unit IDs, requirement IDs, non-goals, drift stops, and verification gates.
+- Treat CE skills as subroutines. The orchestrator owns the tail unless the user explicitly hands ownership to another workflow.
 
 ## Baked-In Defaults
 
@@ -85,10 +87,12 @@ When running `/orchestrate`:
 - Discover repo root, current branch, dirty state, existing plans, active issues, active worktrees, active threads, and active automations.
 - Classify the orchestration unit as a single ticket, ticket set, or campaign.
 - Ensure requirements are durable enough. If not, route to Intake or `ce-brainstorm`/`ce-plan` before implementation.
+- Enforce the alignment contract before worker launch: implementation-ready source, traceable unit IDs, explicit non-goals, drift stops, and verification gates.
 - Build or update a private ledger entry before creating workers.
 - Launch workers only after branch, worktree, and env readiness are checked.
 - Create compact worker heartbeats and a main orchestrator heartbeat when work continues beyond the current turn.
-- Run `ce-code-review` or equivalent review subagents after implementation and before shipping.
+- Require CE-style evidence from every worker handoff: behavior-change signal, tests inspected, tests added/changed/used unchanged, red failure or characterization evidence when applicable, verification run, and no-test exception reason when applicable.
+- Run `ce-code-review` or equivalent review subagents after implementation and before shipping. Use machine-readable review mode when available so the orchestrator can apply or route findings.
 - Use `ce-commit-push-pr` for shipping when the branch is ready.
 - Notify the UAT thread when a PR is ready for user validation.
 - Watch checks when policy requires it, then merge only under explicit user or setup policy.
@@ -108,5 +112,8 @@ When running `/orchestrator:status`:
 - `references/blocking-questions.md` - required question discipline and menus.
 - `references/setup.md` - `/orchestrator:setup` wizard and private state.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
+- `references/alignment-contract.md` - plan readiness, U-ID/R-ID traceability, and drift stop rules.
+- `references/evidence-and-review.md` - proof strategy, worker evidence fields, and review finding handling.
+- `references/ce-subroutine-contract.md` - how to invoke CE skills without losing orchestrator tail ownership.
 - `references/status.md` - `/orchestrator:status` and recovery behavior.
 - `references/templates.md` - worker, heartbeat, UAT, and status templates.

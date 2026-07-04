@@ -2,6 +2,14 @@
 
 `/orchestrator:status` reports current or latest orchestration work.
 
+## Contents
+
+- Source Order
+- Status Shape
+- Required Truth Labels
+- Recovery Behavior
+- Status Report Template
+
 ## Source Order
 
 1. Private orchestration ledger.
@@ -21,15 +29,17 @@ Report by orchestration unit.
 For a single ticket:
 
 - Ticket/plan.
+- Source plan readiness and covered unit/requirement IDs.
 - Worker thread and branch.
 - PR/UAT state.
 - Verification evidence.
+- Review finding state.
 - Blockers.
 - Next action.
 
 For a ticket set:
 
-- Table of issues with lane, worker, PR, UAT, blocker, and next action.
+- Table of issues with lane, unit IDs, worker, PR, UAT, blocker, evidence, review state, and next action.
 - Shared resource constraints.
 - Final UAT policy and remaining integration work.
 
@@ -40,6 +50,7 @@ For a campaign:
 - Active lanes.
 - Parked blockers.
 - Current scoreboard or next slice.
+- Evidence and review coverage by shipped slice.
 - Heartbeat and automation state.
 
 ## Required Truth Labels
@@ -80,6 +91,15 @@ Blocked or parked:
 Verification:
 - Passed: <commands/evidence>
 - Not run: <commands/evidence> because <reason>
+
+Plan alignment:
+- Source: <plan/issue>
+- Units/requirements: <ids>
+- Drift: <none or explicit approved drift>
+
+Review:
+- Blocking findings: <none or list>
+- Residual findings: <accepted risks>
 
 Next:
 - <one or two concrete next actions>

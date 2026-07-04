@@ -2,6 +2,15 @@
 
 Keep prompts compact. Point to durable context instead of copying whole transcripts.
 
+## Contents
+
+- Worker Standby Prompt
+- Worker Implementation Prompt
+- Worker Heartbeat Prompt
+- Main Orchestrator Heartbeat Prompt
+- UAT Notification
+- Linear/Issue Comment
+
 ## Worker Standby Prompt
 
 ```text
@@ -37,7 +46,10 @@ Read and follow:
 Scope:
 - In scope: <items>
 - Non-goals: <items>
+- Unit IDs: <U-IDs or none>
+- Requirement IDs: <R/F/AE/KTD IDs or none>
 - First files/surfaces to inspect: <files>
+- Drift stops: stop and report before changing product behavior, acceptance criteria, excluded files, dependency posture, UAT/merge policy, or work outside the assigned unit.
 
 Branch and PR policy:
 - Branch: <branch expectation>
@@ -47,13 +59,19 @@ Branch and PR policy:
 Verification expected:
 - <commands>
 - <browser/UAT evidence if relevant>
+- Evidence strategy: inspect existing tests first; for behavior changes, prefer failing proof or characterization before production changes when practical.
 - If a gate cannot run, report exact command/error and residual risk.
 
 Final handoff must include:
 - changed files
+- behavior changed? yes/no
+- existing tests inspected
+- tests added/changed/used unchanged
+- red failure or characterization evidence when applicable
 - commit hash if any
 - PR URL if any
 - verification commands/results
+- no-test exception reason when applicable
 - blockers
 - residual risk
 - heartbeat id/name if one exists and should be deleted
@@ -82,10 +100,15 @@ PR ready for UAT: <PR URL>
 
 Scope:
 - <what changed>
+- Plan alignment: <unit IDs / requirements / approved drift>
 
 Verification:
 - Passed: <commands/evidence>
 - Not run: <commands/evidence and reason>
+
+Review:
+- Blocking findings: <none or list>
+- Residual risks: <risks>
 
 Suggested UAT:
 - <user-facing checks>

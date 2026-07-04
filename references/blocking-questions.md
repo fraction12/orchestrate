@@ -2,6 +2,12 @@
 
 Use blocking questions to prevent bad orchestration. Important policy must be explicit before workers start.
 
+## Contents
+
+- Rules
+- Setup Questions
+- Execution Questions
+
 ## Rules
 
 - Ask one question per turn.

@@ -2,6 +2,15 @@
 
 `/orchestrator:setup` installs the repo's orchestration operating model. It must not start implementation work.
 
+## Contents
+
+- Phase 1: Inspect
+- Phase 2: Ask Required Questions
+- Phase 3: Create Threads
+- Phase 4: Private Ledger
+- Phase 5: Optional ORCHESTRATOR.md
+- Setup Completion Report
+
 ## Phase 1: Inspect
 
 Read:

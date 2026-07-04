@@ -2,6 +2,18 @@
 
 `/orchestrate` runs an orchestration unit. A unit can be a single ticket, a ticket set, or a campaign.
 
+## Contents
+
+- Phase 0: Resume Or Classify
+- Phase 1: Intake And Readiness
+- Phase 2: Plan Or Campaign Contract
+- Phase 3: Worker Launch
+- Phase 4: Watch And Unblock
+- Phase 5: Review
+- Phase 6: Ship
+- Phase 7: Cleanup
+- Unit-Specific Notes
+
 ## Phase 0: Resume Or Classify
 
 Read private ledger first. If an active unit matches the prompt, resume it instead of starting a duplicate.
@@ -38,24 +50,29 @@ If readiness is missing:
 - Otherwise run `ce-brainstorm` for product shape or `ce-plan` for implementation planning.
 - Do not dispatch implementation workers from under-specified requirements.
 
+If using CE skills during readiness, read `ce-subroutine-contract.md` first. The orchestrator owns the tail: CE planning can create or enrich the plan, but worker launch, review routing, UAT notification, merge policy, and cleanup stay with `/orchestrate`.
+
 ## Phase 2: Plan Or Campaign Contract
 
 Single ticket:
 
 - Use an existing implementation-ready plan or run `ce-plan`.
 - Confirm worker scope, verification, and UAT route.
+- Read `alignment-contract.md` and create a lane packet with source plan, U-IDs, R/F/AE/KTD references, non-goals, drift stops, and verification gates.
 
 Ticket set:
 
 - Build or update a campaign plan with inventory, dependencies, lane ownership, stop conditions, verification, and definition of done.
 - Sequence shared primitives first.
 - Parallelize only disjoint file ownership.
+- Require every lane to map to a plan unit, ticket, or explicit campaign slice. Do not allow generic "cleanup" lanes without a traceable objective.
 
 Campaign:
 
 - Create or update a durable campaign doc or issue state.
 - Define scoreboard/backlog boundary, current slice selection rule, stop/continue rules, and status cadence.
 - Keep automation prompt compact and point to the campaign state.
+- Keep each loop iteration PR-sized and traceable to the campaign boundary. Update the ledger rather than editing plan progress checkboxes.
 
 ## Phase 3: Worker Launch
 
@@ -77,12 +94,15 @@ Worker prompt must include:
 
 - Goal and why it matters.
 - Issue or plan path.
+- Unit IDs and requirement IDs when a plan exists.
 - Branch policy.
 - Files/surfaces to inspect first.
 - Scope and non-goals.
+- Drift stop rules.
 - Verification commands.
+- Evidence strategy expected for behavior-bearing work.
 - Whether it may commit, push, open PR, or only hand off.
-- Final handoff shape: changed files, verification, commit/PR, blockers, residual risk.
+- Final handoff shape: changed files, behavior-change signal, tests inspected, tests added/changed/used unchanged, red failure or characterization evidence when applicable, verification run, no-test exception reason when applicable, commit/PR, blockers, residual risk.
 
 ## Phase 4: Watch And Unblock
 
@@ -90,33 +110,38 @@ The orchestrator must monitor until the unit is integrated, deferred, or cancele
 
 When a worker reports:
 
-- Done: inspect branch, diff, tests, PR, and visible behavior where relevant.
+- Done: inspect branch, diff, tests, PR, visible behavior where relevant, and returned evidence fields. Mark omitted evidence as unverified rather than inventing it.
 - Blocked: classify the blocker as worker-local, lane-specific, campaign-wide, external auth/tooling, or user decision.
 - Needs decision: ask one blocking question, then send a narrow unblock prompt.
 
 For lane-specific blockers, park the lane and continue unrelated safe lanes when policy allows.
 
+Stop and ask or route back to Intake when implementation needs to change product behavior, acceptance criteria, source-plan requirements, excluded files, dependency posture, UAT policy, or merge authority.
+
 ## Phase 5: Review
 
 After implementation and before shipping:
 
-- Run `ce-code-review` when available.
+- Read `evidence-and-review.md`.
+- Run `ce-code-review mode:agent plan:<plan-path> base:<base-ref>` when available and a plan/base can be resolved. Use the closest equivalent when not available.
 - Spawn review subagents appropriate to risk: correctness, testing, maintainability, security, performance, product/design, API/data migration, or project standards.
 - Pass raw diff/context, not your intended answer.
 - Integrate valid review fixes.
 - Re-run affected verification.
+- Do not ship with unresolved P0/P1 findings. Record unresolved P2/P3 as residual risk only when policy allows.
 
 Do not ship on worker self-review alone.
 
 ## Phase 6: Ship
 
-Use `ce-commit-push-pr` when the branch is ready and the user/policy permits shipping.
+Read `ce-subroutine-contract.md`. Use `ce-commit-push-pr` when the branch is ready and the user/policy permits shipping.
 
 Before PR:
 
 - Confirm branch base and changed files.
 - Run relevant verification.
-- Ensure PR body includes scope, tests run, tests not run, residual risk, and issue links.
+- Ensure PR body includes scope, unit IDs/requirements when available, tests run, tests not run, UAT notes, residual risk, and issue links.
+- Avoid sweeping staging. Stage intentional files only.
 
 After PR:
 
