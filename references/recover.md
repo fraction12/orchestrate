@@ -40,7 +40,7 @@ Allowed when policy is known:
 - Rename active worker threads to `WORKER <lane-id> - <short work name>` when lane ids and thread ids are known.
 - Route completed merged residue to `/orchestrator:cleanup` instead of mixing broad cleanup into recovery.
 - Do not broad-list Codex threads to reconstruct missing ids. If ids are missing, mark the thread relation as `unknown` and ask for direct ids or route to doctor.
-- Use bounded worker resolution for worker threads created in the current run when pending ids, pending worktree ids, expected title, repo, and creation timestamp are recorded.
+- Use bounded worker resolution for worker threads created in the current run when pending ids, pending worktree ids, expected title, lane/issue terms, repo, and creation timestamp are recorded.
 
 Ask before:
 

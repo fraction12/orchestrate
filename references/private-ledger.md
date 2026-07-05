@@ -75,11 +75,14 @@ For every worker create request, record enough data to resolve the worker withou
 - `pendingWorktreeId` when returned
 - `threadResolutionSource`
 - `threadTitle`
+- `expectedThreadTitle`
+- `issueOrPlanTerms`
 - `seedPromptSummary`
 - `createdAt`
 - `repoRoot`
 - `branch`
 - `worktree`
+- `resolutionQueriesTried`
 
 Keep these fields even after `threadId` is resolved so recovery can explain how the worker was bound.
 

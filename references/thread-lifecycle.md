@@ -31,21 +31,30 @@ If the only way to find a thread would be broad listing, mark the thread state a
 
 Worker threads are different from setup threads: the orchestrator often creates them during the current run and must bind the returned thread id back to the lane ledger.
 
-For worker threads created in the current run, a bounded resolution lookup is allowed when all are true:
+Pending worktree handles are not thread ids. Never use a `pendingWorktreeId`, queued worktree id, worktree path, or branch name as the target for `send_message_to_thread`, `read_thread`, `set_thread_title`, or archive/title operations. Treat those values as correlation fields for finding the real thread id.
+
+For worker threads created in the current run, bounded resolution is allowed when all are true:
 
 - the worker create request happened in the current run;
-- the lane id, expected worker title, seed prompt summary, repo root, branch/worktree, and creation timestamp are already recorded;
-- the create response returned a pending id, pending worktree id, queued id, or other correlation token, or the expected worker title is unique inside this orchestration unit;
-- the lookup can be constrained to that correlation token or to this repo/unit/title/time window;
-- at most one lookup attempt is made after the 60-second provisioning wait.
+- the lane id, expected worker title, issue/plan terms, seed prompt summary, repo root, branch/worktree, and creation timestamp are already recorded;
+- the create response returned a thread id, pending id, pending worktree id, queued id, or other correlation token, or the expected worker title is unique inside this orchestration unit;
+- each lookup can be constrained to this repo/unit/title/lane/time window or to a recorded correlation token.
 
-This is not permission for global thread inventory. Do not scan the whole Codex history to discover unrelated threads. If the platform only offers an unfiltered thread list, use it at most once with the smallest available limit/page size and immediately filter to the current run's worker correlation fields; otherwise leave the worker `pendingThreadId` unresolved and report the recovery step.
+Resolution ladder:
+
+1. Use a thread id returned directly by the create response.
+2. Query by the exact intended worker title: `WORKER <lane-id> - <short work name>`.
+3. If the exact title is not found, query by lane id plus issue/plan terms from the worker packet, because Codex may initially materialize the thread under an app-generated title.
+4. If the user or UI indicates the worker threads are visible but still unresolved, perform one recent local thread lookup with the smallest available page/limit and immediately filter to current-run correlation fields: repo, lane ids, issue/plan terms, pending worktree ids, branch/worktree paths, and creation time.
+5. If exactly one candidate maps to a lane, record it and rename it to the canonical `WORKER ...` title.
+
+This is not permission for global thread inventory. Do not scan the whole Codex history to discover unrelated threads. Across one resolution pass, use at most one exact-title query per unresolved lane, at most one lane/issue query per unresolved lane, and at most one recent local thread page for the whole orchestration unit.
 
 When a bounded lookup resolves exactly one worker thread:
 
 - record `threadId`;
 - clear or retain `pendingThreadId` as historical evidence;
-- set `threadResolutionSource` to `create-response`, `pending-worktree`, `bounded-lookup`, or `user-provided`;
+- set `threadResolutionSource` to `create-response`, `exact-worker-title-query`, `lane-issue-query`, `recent-local-page`, or `user-provided`;
 - apply the intended `WORKER <lane-id> - <short work name>` title when title tool is available.
 
 If it resolves zero or multiple candidates, do not guess. Keep the lane in `pending-thread` state and ask for the direct worker thread id or retry via `/orchestrator:doctor`.

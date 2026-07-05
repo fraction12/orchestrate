@@ -110,8 +110,8 @@ WORKER <lane-id> - <short work name>
 Launch pattern:
 
 1. Create worker thread/worktree in standby.
-2. Immediately capture every correlation field from the create response: `threadId`, `pendingThreadId`, `pendingWorktreeId`, queued id, create timestamp, expected worker title, branch/worktree, and seed prompt summary.
-3. If thread id is not immediately available, wait 60 seconds and use `thread-lifecycle.md` bounded worker resolution. Do not use broad thread listing.
+2. Immediately capture every correlation field from the create response: `threadId`, `pendingThreadId`, `pendingWorktreeId`, queued id, create timestamp, expected worker title, lane id, issue/plan terms, branch/worktree, and seed prompt summary.
+3. If thread id is not immediately available, wait 60 seconds and use `thread-lifecycle.md` bounded worker resolution. Do not use broad thread listing. Do not treat pending worktree handles as thread ids.
 4. Rename the worker thread to its intended `WORKER ...` title when the id is available.
 5. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
 6. Orchestrator checks worker cwd and worktree env readiness.
@@ -122,7 +122,7 @@ Launch pattern:
 
 Before creating heartbeats, read `automation-lifecycle.md`. Reuse or update matching automations instead of creating duplicates.
 
-Do not call broad `list_threads` to discover worker threads. Bounded worker resolution is allowed only for a worker created in the current run and only with the correlation fields recorded above. If a worker thread id remains pending, keep the lane in pending-thread state and continue only with safe non-thread actions.
+Do not call broad `list_threads` to discover worker threads. Bounded worker resolution is allowed only for workers created in the current run and only with the correlation fields recorded above. If a worker thread id remains pending, keep the lane in pending-thread state and continue only with safe non-thread actions.
 
 Do not make the worker hand-run setup as its first meaningful task when the orchestrator can prepare the worktree.
 
