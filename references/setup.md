@@ -71,7 +71,9 @@ Create or identify:
 - Intake Thread: local `main`, same repo, no worktree. Purpose: task-tracker-agnostic requirements intake, `ce-brainstorm`, `ce-plan`, ticket/doc grooming.
 - UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
 
-Before creating Intake or UAT, check the private ledger and any explicit thread ids the user supplied for existing usable setup threads. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT.
+Before creating Intake or UAT, check the private ledger and any explicit thread ids the user supplied for existing usable setup threads. A setup thread is usable only when `thread-lifecycle.md` says it is usable. Archived, unreadable, missing, or wrong-role threads are not usable. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist and are usable for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT when usable setup threads exist.
+
+If the ledger points at archived Intake or UAT threads, do not reuse those ids. Mark the old ledger entries `archived`/`stale`, create replacement Intake/UAT threads, and write the new ids or pending ids back to the ledger.
 
 Thread prompts must be compact.
 
@@ -124,19 +126,24 @@ Minimum state shape:
     "main": {
       "id": "thread-id",
       "title": "ORCHESTRATOR",
-      "titleStatus": "set"
+      "titleStatus": "set",
+      "lifecycleStatus": "active"
     },
     "intake": {
       "id": "thread-id",
       "pendingThreadId": null,
       "title": "INTAKE",
-      "titleStatus": "set"
+      "titleStatus": "set",
+      "lifecycleStatus": "active",
+      "replacesThreadId": null
     },
     "uat": {
       "id": "thread-id",
       "pendingThreadId": null,
       "title": "UAT",
-      "titleStatus": "set"
+      "titleStatus": "set",
+      "lifecycleStatus": "active",
+      "replacesThreadId": null
     }
   },
   "policies": {
@@ -168,6 +175,7 @@ If one exists, offer to update it only when setup decisions materially change re
 Report:
 
 - Main, Intake, and UAT thread ids, or pending state with the exact manual recovery step.
+- Any archived/stale setup thread ids that were replaced.
 - Thread titles and any title-setting fallback.
 - Policy decisions.
 - Ledger location.

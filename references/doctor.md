@@ -14,6 +14,7 @@ Run these checks:
 - Repo root/default branch are detectable.
 - Setup ledger exists, is private, parseable, and current.
 - Main, Intake, and UAT threads exist when setup has run.
+- Ledger-known setup threads are usable, active, and not archived; archived Intake/UAT threads should be marked stale and recreated by setup.
 - Thread titles are `ORCHESTRATOR`, `INTAKE`, and `UAT`.
 - Worker threads for active lanes follow `WORKER <lane-id> - <short work name>` when their ids are available.
 - Doctor avoids broad `list_threads`; missing thread ids are reported as pending/manual recovery instead of scanning all Codex threads.
@@ -30,6 +31,7 @@ Apply without asking when clearly safe:
 - Remove nested duplicate wrapper skills under the canonical install.
 - Re-run skill validation.
 - Rename setup threads to stable titles when thread ids are known and title tool is available.
+- Mark archived/unusable setup thread ledger entries stale and route to setup for replacement.
 - Rename active worker threads to stable `WORKER ...` titles when thread ids and lane ids are known.
 - Add missing non-secret ledger fields while preserving unknown fields.
 

@@ -70,6 +70,7 @@ Use these labels:
 - Worker-reported: stated by a worker but not yet checked.
 - Inferred: reconstructed from partial state.
 - Stale: ledger or automation points to something outdated, missing, merged, closed, or no longer readable.
+- Archived: ledger points to a Codex thread that exists but was archived and should not be reused for active setup or worker routing.
 - Missing: not available from any source checked.
 
 Never present worker-reported, inferred, stale, or missing status as verified.

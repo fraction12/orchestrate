@@ -96,7 +96,7 @@ When running `/orchestrator:setup`:
 
 - Verify the Compound Engineering dependency first. If missing, stop for install.
 - Mark the current thread as the Main Orchestrator in private state.
-- Reuse existing Main Orchestrator, Intake, and UAT threads from the private ledger, create responses, or explicit user-provided ids when they already exist. Do not recreate persistent setup threads for later `/orchestrate` runs in the same repo.
+- Reuse existing Main Orchestrator, Intake, and UAT threads from the private ledger, create responses, or explicit user-provided ids only when they are usable and not archived. Do not recreate persistent setup threads for later `/orchestrate` runs in the same repo when usable setup threads exist.
 - Create an Intake thread on local `main` for task-tracker-agnostic requirements intake, ticket/doc grooming, `ce-brainstorm`, and `ce-plan` only when no usable Intake thread exists.
 - Create a UAT thread on local `main` for PR acceptance testing and user-facing validation only when no usable UAT thread exists.
 - Rename the Main Orchestrator thread to `ORCHESTRATOR`, the Intake thread to `INTAKE`, and the UAT thread to `UAT` so the user can find them in the Codex app.

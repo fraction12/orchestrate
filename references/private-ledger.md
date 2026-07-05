@@ -72,6 +72,7 @@ Mark ledger entries stale when:
 - A referenced branch no longer exists locally or remotely.
 - A PR is merged, closed, or missing.
 - A worker thread cannot be read.
+- A setup thread is archived, unreadable, wrong-role, or explicitly replaced.
 - An automation points to a missing or completed unit.
 - `updatedAt` is older than the heartbeat cadence and active work exists.
 

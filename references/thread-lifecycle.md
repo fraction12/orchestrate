@@ -27,6 +27,18 @@ Avoid broad `list_threads` in setup, execution, cleanup, status, and recover. Us
 
 If the only way to find a thread would be broad listing, mark the thread state as `pending` or `unknown` and report the exact manual recovery step.
 
+## Thread Usability
+
+A setup or worker thread id is usable only when all are true:
+
+- the id is known from the ledger, a create response, or explicit user input;
+- a direct read/send/title operation against that id is available or not required for the current action;
+- the thread is not archived;
+- the title/role matches the expected role when known;
+- it belongs to the same repo or orchestration unit when that can be verified.
+
+Archived threads are not usable setup threads. If a ledger points to an archived `INTAKE` or `UAT`, setup should mark the old entry `archived` or `stale`, create a replacement thread, and update the ledger. Do not unarchive archived setup threads unless the user explicitly asks.
+
 ## Stable Titles
 
 Setup threads use exact titles:
@@ -36,6 +48,8 @@ Setup threads use exact titles:
 - `UAT`
 
 These three setup threads are persistent. Setup, execution, cleanup, status, and recover must identify and reuse them when they exist. Do not recreate, archive, or delete them as part of normal orchestration cleanup.
+
+Persistent does not mean immortal. If the user manually archived one of these setup threads, treat it as no longer usable and create a replacement during setup.
 
 Worker threads must be named for the work they own:
 
