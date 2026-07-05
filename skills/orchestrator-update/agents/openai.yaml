@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Update"
+  short_description: "Update Orchestrator from GitHub"
+  default_prompt: "Use $orchestrator-update to update the installed Orchestrator skills from the latest GitHub repo version."

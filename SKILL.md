@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering requirements intake, CE planning, worker execution, review subagents, PR creation, UAT, merge policy, automation, status, and cleanup. Requires the Compound Engineering skill set; stop and request/install CE if missing. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, asks to orchestrate ready Linear/GitHub tickets, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
+description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering requirements intake, CE planning, worker execution, review subagents, PR creation, UAT, merge policy, automation, status, cleanup, and repo-backed skill updates. Requires the Compound Engineering skill set for setup/execution; stop and request/install CE if missing. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, /orchestrator:update, asks to orchestrate ready Linear/GitHub tickets, asks to update the Orchestrator skill from GitHub, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
 ---
 
 # Orchestrate
@@ -18,6 +18,7 @@ Recognize these commands and route immediately:
 - `/orchestrator:setup` - establish the orchestration operating model for this repo. Read `references/setup.md`.
 - `/orchestrate` - run one orchestration unit through planning, workers, review, PR, UAT, merge policy, and cleanup. Read `references/execution.md`.
 - `/orchestrator:status` - report current or latest orchestration state. Read `references/status.md`.
+- `/orchestrator:update` - update the installed user-scope Orchestrator skills from the latest GitHub repo version. Read `references/update.md`.
 
 If the user says "orchestrate this" without a slash command, treat it as `/orchestrate`.
 
@@ -26,6 +27,7 @@ Normalize common aliases before routing:
 - `/ochestrate` or `/orchestrator:run` -> `/orchestrate`.
 - `/ochestrator:setup` -> `/orchestrator:setup`.
 - `/ochestrator:status` -> `/orchestrator:status`.
+- `/ochestrator:update` -> `/orchestrator:update`.
 
 ## Non-Negotiables
 
@@ -124,6 +126,16 @@ When running `/orchestrator:status`:
 - Include active workers, branches, worktrees, PRs, heartbeats, UAT state, blockers, verified evidence, skipped checks, and next action.
 - Label reconstructed facts as verified, inferred, stale, or missing. Do not present inferred state as verified.
 
+## Update Responsibilities
+
+When running `/orchestrator:update`:
+
+- Do not require Compound Engineering first.
+- Read `references/update.md`.
+- Update from the canonical private GitHub repo into user-scope skills.
+- Validate the installed canonical skill and wrapper skills.
+- Report the installed commit/ref and remind the user to restart Codex.
+
 ## References
 
 - `references/blocking-questions.md` - required question discipline and menus.
@@ -137,4 +149,5 @@ When running `/orchestrator:status`:
 - `references/ce-subroutine-contract.md` - how to invoke CE skills without losing orchestrator tail ownership.
 - `references/uat-merge-policy.md` - individual, combined, and hybrid UAT branch/merge behavior.
 - `references/status.md` - `/orchestrator:status` and recovery behavior.
+- `references/update.md` - `/orchestrator:update` GitHub refresh behavior.
 - `references/templates.md` - worker, heartbeat, UAT, and status templates.
