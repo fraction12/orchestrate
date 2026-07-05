@@ -17,6 +17,9 @@ Keep prompts compact. Point to durable context instead of copying whole transcri
 ```text
 Stand by as the implementation worker for <repo>/<ticket-or-slice>.
 
+Expected thread title: WORKER <lane-id> - <short work name>
+Lane id: <lane-id>
+
 Read:
 - AGENTS.md or repo instructions
 - ORCHESTRATOR.md if present
@@ -38,6 +41,10 @@ Implement <ticket/slice> now.
 
 Goal:
 - <concrete outcome and why it matters>
+
+Thread:
+- Title: WORKER <lane-id> - <short work name>
+- Lane id: <lane-id>
 
 Read and follow:
 - <repo instructions>
@@ -145,6 +152,7 @@ Orchestration started.
 - Scope: <scope>
 - Non-goals: <non-goals>
 - Worker thread(s): <ids if safe for private tracker; omit from public-facing trackers if not appropriate>
+- Worker title(s): <private tracker only; omit from public-facing trackers if not appropriate>
 - Branch/PR policy: <policy>
 - Verification: <expected gates>
 - UAT policy: <policy>

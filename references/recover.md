@@ -36,6 +36,7 @@ Allowed when policy is known:
 - Recreate a compact main heartbeat for active work.
 - Notify UAT for a ready PR when policy already says to notify.
 - Rename setup threads back to `ORCHESTRATOR`, `INTAKE`, and `UAT`.
+- Rename active worker threads to `WORKER <lane-id> - <short work name>` when lane ids and thread ids are known.
 
 Ask before:
 

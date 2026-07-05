@@ -39,7 +39,7 @@ For a single ticket:
 - Compound Engineering availability.
 - Ticket/plan.
 - Source plan readiness and covered unit/requirement IDs.
-- Worker thread and branch.
+- Worker thread title/id and branch.
 - PR/UAT state.
 - Verification evidence.
 - Review finding state.
@@ -48,7 +48,7 @@ For a single ticket:
 
 For a ticket set:
 
-- Table of issues with lane, unit IDs, worker, PR, UAT, blocker, evidence, review state, and next action.
+- Table of issues with lane, unit IDs, worker title/id, PR, UAT, blocker, evidence, review state, and next action.
 - Shared resource constraints.
 - Final UAT policy and remaining integration work.
 
@@ -98,7 +98,7 @@ Inferred/Stale/Missing:
 - <facts reconstructed or unavailable, with source checked>
 
 Active lanes:
-- <ticket>: <worker/thread>, <branch>, <PR/UAT/check state>, next action
+- <ticket>: <worker title/thread>, <branch>, <PR/UAT/check state>, next action
 
 Blocked or parked:
 - <lane>: <blocker>, <owner>, <resume condition>

@@ -25,6 +25,7 @@ Read:
 - Existing private orchestration ledger if present.
 - `compound-engineering-dependency.md` before creating threads or writing setup state.
 - `private-ledger.md` before deciding where state belongs.
+- `thread-lifecycle.md` before creating or renaming threads.
 - `parallel-orchestration.md` before asking concurrency/worktree questions.
 
 Determine:
@@ -60,6 +61,8 @@ Use Codex thread tools. If not loaded, search for them. Include `set_thread_titl
 
 If thread tools are unavailable, do not fake thread creation. Record setup as partial, store the missing capability in the ledger, and tell the user that Intake/UAT routing will stay in the Main Orchestrator until tools are available.
 
+Read `thread-lifecycle.md`. If created Intake/UAT threads do not immediately return ids, wait 60 seconds, then perform one focused lookup before declaring creation failed.
+
 Create or identify:
 
 - Main Orchestrator: current thread.
@@ -88,7 +91,7 @@ Rename threads immediately after creation or identification:
 - Intake Thread: `INTAKE`
 - UAT Thread: `UAT`
 
-Use `set_thread_title` when available. If title updates fail or the tool is unavailable, do not block setup. Record `titleStatus` as `failed` or `unavailable` in the ledger and include the fallback in the setup completion report.
+Use `set_thread_title` when available. If title updates fail or the tool is unavailable, do not block setup. Record `titleStatus` as `failed`, `pending`, or `unavailable` in the ledger and include the fallback in the setup completion report.
 
 Avoid adding repo names, ticket numbers, or dates to these three setup thread titles. Their job is stable sidebar findability.
 

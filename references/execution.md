@@ -101,15 +101,23 @@ Campaign:
 
 Use visible Codex worker threads for PR-bound implementation when available.
 
+Read `thread-lifecycle.md` before creating worker threads. Every worker thread must have an intended title:
+
+```text
+WORKER <lane-id> - <short work name>
+```
+
 Launch pattern:
 
 1. Create worker thread/worktree in standby.
-2. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
-3. Orchestrator checks worker cwd and worktree env readiness.
-4. Run repo setup script or configured env setup from the orchestrator side when needed.
-5. Send the real implementation prompt.
-6. Create worker heartbeat if the work may continue beyond the current turn.
-7. Record thread id, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
+2. If thread id is not immediately available, wait 60 seconds and perform one focused lookup before treating creation as failed.
+3. Rename the worker thread to its intended `WORKER ...` title when the id is available.
+4. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
+5. Orchestrator checks worker cwd and worktree env readiness.
+6. Run repo setup script or configured env setup from the orchestrator side when needed.
+7. Send the real implementation prompt.
+8. Create worker heartbeat if the work may continue beyond the current turn.
+9. Record thread id or pending id, thread title, title status, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
 
 Before creating heartbeats, read `automation-lifecycle.md`. Reuse or update matching automations instead of creating duplicates.
 
@@ -118,6 +126,7 @@ Do not make the worker hand-run setup as its first meaningful task when the orch
 Worker prompt must include:
 
 - Goal and why it matters.
+- Worker title and lane id.
 - Issue or plan path.
 - Unit IDs and requirement IDs when a plan exists.
 - Branch policy.

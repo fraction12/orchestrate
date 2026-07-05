@@ -15,6 +15,7 @@ Run these checks:
 - Setup ledger exists, is private, parseable, and current.
 - Main, Intake, and UAT threads exist when setup has run.
 - Thread titles are `ORCHESTRATOR`, `INTAKE`, and `UAT`.
+- Worker threads for active lanes follow `WORKER <lane-id> - <short work name>` when their ids are available.
 - Thread tools, automation tools, and `set_thread_title` availability.
 - Worktree env policy and concurrency policy are recorded.
 - No nested wrapper skills are installed under `orchestrate/skills`.
@@ -27,6 +28,7 @@ Apply without asking when clearly safe:
 - Remove nested duplicate wrapper skills under the canonical install.
 - Re-run skill validation.
 - Rename setup threads to stable titles when thread ids are known and title tool is available.
+- Rename active worker threads to stable `WORKER ...` titles when thread ids and lane ids are known.
 - Add missing non-secret ledger fields while preserving unknown fields.
 
 Ask before:

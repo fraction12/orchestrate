@@ -95,6 +95,7 @@ When running `/orchestrator:setup`:
 - Store thread ids and setup policy in a private ledger. Prefer `.codex/orchestrator/state.json` only when it is ignored/local; otherwise use `$CODEX_HOME/orchestrator-state/<repo-id>/state.json`.
 - Offer to create or update `ORCHESTRATOR.md`; do not require it.
 - Create no implementation worker during setup.
+- Use `references/thread-lifecycle.md` for Codex thread provisioning delays and stable thread titles.
 - Use `references/private-ledger.md` for repo id derivation, safe local-vs-CODEX_HOME storage, locking, stale detection, and schema upgrades.
 - Use `references/parallel-orchestration.md` to capture default parallelism policy and worktree/worker limits.
 
@@ -113,6 +114,7 @@ When running `/orchestrate`:
 - Enforce the alignment contract before worker launch: implementation-ready source, traceable unit IDs, explicit non-goals, drift stops, and verification gates.
 - Build or update a private ledger entry before creating workers.
 - Launch workers only after branch, worktree, and env readiness are checked.
+- Name every worker thread as `WORKER <lane-id> - <short work name>` and handle Codex thread provisioning delays through `references/thread-lifecycle.md`.
 - Create compact worker heartbeats and a main orchestrator heartbeat when work continues beyond the current turn.
 - Use `references/automation-lifecycle.md` for heartbeat naming, payload shape, update/delete behavior, and status recovery.
 - Require CE-style evidence from every worker handoff: behavior-change signal, tests inspected, tests added/changed/used unchanged, red failure or characterization evidence when applicable, verification run, and no-test exception reason when applicable.
@@ -169,6 +171,7 @@ When running `/orchestrator:update`:
 - `references/setup.md` - `/orchestrator:setup` wizard and private state.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
 - `references/parallel-orchestration.md` - dependency-aware parallel worktree and worker policy.
+- `references/thread-lifecycle.md` - thread creation wait behavior, stable titles, and worker naming.
 - `references/recover.md` - `/orchestrator:recover` state reconstruction and repair behavior.
 - `references/doctor.md` - `/orchestrator:doctor` setup health checks and safe fixes.
 - `references/private-ledger.md` - private state location, repo id, locking, stale detection, and schema upgrades.
