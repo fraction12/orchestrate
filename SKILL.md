@@ -51,6 +51,7 @@ Normalize common aliases before routing:
 - Do not use broad Codex thread listing as part of setup or routine orchestration. Use ledger-known, create-returned, or user-provided thread ids. For workers created in the current run, `references/thread-lifecycle.md` allows bounded worker resolution using worker-title, lane, issue/plan, pending-worktree, and recent-create correlation fields; otherwise record unresolved ids as pending instead of scanning all threads.
 - Treat worker claims as untrusted until checked against branch, diff, tests, PR metadata, CI, and visible behavior when relevant.
 - Do not merge, archive, delete worktrees, mark issues done, or stop heartbeats merely because a worker says it finished.
+- Every main orchestrator heartbeat or resume must begin with live reconciliation: compare ledger state to actual automations, worker branch/worktree state, PRs/checks, and known thread ids before moving work forward.
 - Carry plan alignment forward at every handoff. Every worker lane must know its source plan, unit IDs, requirement IDs, non-goals, drift stops, and verification gates.
 - Treat CE skills as subroutines. The orchestrator owns the tail unless the user explicitly hands ownership to another workflow.
 - Prefer dependency-aware parallel worktree workers for ticket sets and campaigns. Use serial execution only when dependencies, shared files, or env limits require it.

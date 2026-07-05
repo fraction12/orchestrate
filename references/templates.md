@@ -98,7 +98,7 @@ Stay inside scope from <plan/issue>. Keep the branch/worktree policy. Run the ag
 ```text
 Continue orchestrating <unit>.
 
-Read the private ledger and repo contract. Check active workers, PRs, UAT state, blockers, and heartbeats. Keep moving safe lanes. When a PR is ready, notify the UAT thread with PR URL, scope, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. After successful UAT handoff, delete this main heartbeat unless active worker lanes remain; create/update the separate UAT follow-up heartbeat only if policy requires continued watching. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
+Read the private ledger and repo contract. First reconcile live state: actual automations by recorded id, worker branch/worktree commits or diffs, PRs/checks, UAT state, blockers, and ledger-known thread ids. Treat missing worker heartbeats, automation name/id mismatches, branch commits, dirty diffs, and idle worker threads with unread turns as state to verify and record before prompting workers. Keep moving safe lanes. When a PR is ready, notify the UAT thread with PR URL, scope, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. After successful UAT handoff, delete this main heartbeat unless active worker lanes remain; create/update the separate UAT follow-up heartbeat only if policy requires continued watching. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
 ```
 
 ## Automation Payload
@@ -111,7 +111,7 @@ Read:
 - ORCHESTRATOR.md if present
 - active plan/issue: <path-or-id>
 
-Check thread, branch, PR, UAT, review, verification, blockers, cleanup, and automation state. Move only safe next actions. Ask one blocking question if policy is missing or a drift stop is hit. Update the ledger before finishing.
+First reconcile ledger state against live automations, worker branches/worktrees, PRs/checks, UAT, review, verification, blockers, cleanup, and known thread ids. Treat missing active automation ids, automation name/id drift, branch commits/diffs, and idle workers with unread turns as state to verify and record. Move only safe next actions. Ask one blocking question if policy is missing or a drift stop is hit. Update the ledger before finishing.
 ```
 
 ## UAT Notification

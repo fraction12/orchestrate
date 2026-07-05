@@ -16,6 +16,8 @@ Use predictable names:
 
 Names are private tracker labels, not public issue text.
 
+Use the same normalized `laneId` in the ledger, automation `name`, and automation id slug. Keep hyphenated lane ids hyphenated; do not silently rewrite `tldraw-first-edit` to `tldraw:first:edit` or other display-only forms. If the platform requires a filesystem-safe automation id, derive it once, record it in the ledger, and look up the automation by recorded id instead of re-inferring it from the display name.
+
 ## Payload Shape
 
 Keep automation prompts compact:
@@ -23,7 +25,7 @@ Keep automation prompts compact:
 ```text
 Continue orchestrating <unit-id> for <repo-name>.
 
-Read the private ledger at <ledger-location>. Verify thread, branch, PR, UAT, checks, blockers, and cleanup state. Move only safe next actions. If a PR is ready, notify UAT with the PR packet. If policy is missing or a drift stop is hit, ask one blocking question. Update the ledger before finishing.
+Read the private ledger at <ledger-location>. First reconcile ledger state against live automations, worker branches/worktrees, PRs/checks, UAT, blockers, and known thread ids. Treat branch commits/diffs, idle worker threads with unread turns, missing automations, and name/id mismatches as state changes to verify, not as failures. Move only safe next actions. If a PR is ready, notify UAT with the PR packet. If policy is missing or a drift stop is hit, ask one blocking question. Update the ledger before finishing.
 ```
 
 Worker payloads must include lane id, expected branch/worktree, source plan or issue, verification gates, and the final evidence fields. Do not paste full plans into automations.
@@ -53,9 +55,12 @@ During `/orchestrator:status`, classify each automation:
 - `active`: target thread/unit exists and work is not done.
 - `stale`: target branch, thread, PR, or unit is missing.
 - `orphaned`: unit is complete/canceled but automation still exists.
+- `lost`: ledger records an active automation id, but the automation cannot be found through the platform tool or automation file.
 - `unknown`: automation cannot be read.
 
-For stale/orphaned automations, repair or delete only when policy allows. Otherwise report the exact cleanup recommendation.
+For stale, orphaned, or lost automations, repair or delete only when policy allows. Otherwise report the exact cleanup recommendation.
+
+During every main heartbeat, perform this same reconciliation before sending new work. If a worker heartbeat is missing but its branch has a verified commit or diff, do not recreate the heartbeat blindly; inspect the worker thread/branch evidence and advance the lane state first.
 
 ## Deletion Rules
 

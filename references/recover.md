@@ -23,6 +23,7 @@ Classify each unit/lane:
 - `orphaned-worker`: worker/thread/worktree remains after completion/cancel.
 - `lost-thread`: ledger references a thread that cannot be read.
 - `lost-automation`: heartbeat is missing or points at stale state.
+- `ledger-live-drift`: ledger says a lane is still implementing, but live git/thread/automation state shows commits, diffs, unread worker output, or missing heartbeats.
 - `blocked`: needs user/tool/auth decision.
 - `unsafe`: state is contradictory or destructive cleanup could lose work.
 
@@ -31,8 +32,10 @@ Classify each unit/lane:
 Allowed when policy is known:
 
 - Update ledger from verified PR/branch/UAT state.
+- Update lane state from verified branch commits, dirty state, PRs, and worker evidence after comparing ledger to live state.
 - Delete orphaned heartbeats for completed/canceled lanes.
 - Delete a lingering main heartbeat when the unit has already been handed to UAT and no active worker lanes remain.
+- Mark a missing active heartbeat as `lost-automation` and continue evidence collection from the worker thread/branch before deciding whether to recreate or delete it.
 - Mark missing worker evidence as unverified.
 - Recreate a compact main heartbeat for active work.
 - Notify UAT for a ready PR when policy already says to notify.

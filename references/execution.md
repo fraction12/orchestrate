@@ -145,6 +145,17 @@ Worker prompt must include:
 
 The orchestrator must monitor until the unit is integrated, deferred, or canceled.
 
+At the start of every main heartbeat/resume, reconcile live state before prompting workers:
+
+1. Read the ledger and its active unit/lane records.
+2. Check recorded automation ids through the automation tool or automation files; mark missing active ids as `lost-automation`.
+3. Check each worker branch/worktree for commits ahead of base, uncommitted diffs, and clean/dirty state.
+4. Check open PRs and CI/check status for recorded or inferable worker branches.
+5. Check ledger-known worker thread ids only; treat idle threads with unread turns as likely handoff/evidence waiting.
+6. Update the ledger with verified commits, diffs, PRs, lost heartbeats, and worker evidence state before launching new prompts.
+
+Do not treat the ledger as fresher than live git/automation/thread evidence. If live evidence shows a worker commit or coherent diff while the lane is still `implementation-active`, collect and verify the worker evidence before asking that worker to continue.
+
 When a worker reports:
 
 - Done: inspect branch, diff, tests, PR, visible behavior where relevant, and returned evidence fields. Mark omitted evidence as unverified rather than inventing it.

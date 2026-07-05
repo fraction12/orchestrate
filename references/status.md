@@ -26,6 +26,14 @@ Read `compound-engineering-dependency.md` and report CE availability, but do not
 
 If the ledger is missing or stale, reconstruct best effort and label each recovered fact. Do not use broad `list_threads`; if thread state cannot be reconstructed from known ids, label it missing.
 
+For active units, compare ledger state to live state even when the ledger is parseable and recent. Report drift explicitly when:
+
+- an active automation id in the ledger is missing from the platform/files;
+- an automation name/id differs from the ledger for the same unit/lane;
+- a worker branch has commits ahead of base or uncommitted diffs not reflected in the lane state;
+- a worker thread is idle with unread output and the lane lacks verified evidence;
+- Intake/UAT are on a non-default branch or current checkout that could contaminate persistent role work.
+
 ## Recovery, Cleanup, And Doctor Handoff
 
 Status reports facts only. If the user asks to fix stale active orchestration state, route to `/orchestrator:recover`. If the user asks to remove completed residue, route to `/orchestrator:cleanup`. If setup health is missing or degraded, route to `/orchestrator:doctor`. Do not perform repairs from status unless the user explicitly asks and the requested repair is already covered by policy.
@@ -87,6 +95,8 @@ When status reveals stale state:
 - If a branch is conflicted, check whether it still has unique diff before spending time on conflict repair.
 - If UAT was not notified for a ready PR, notify the UAT thread with the PR packet.
 - If an automation points at a missing thread/branch/unit, mark it stale or orphaned and repair only when policy allows.
+- If the ledger points at an active automation that is missing, mark it `lost-automation`; do not assume the worker is complete or recreate the heartbeat until branch/thread evidence is checked.
+- If a worker branch has a new commit or coherent diff but the lane is still `implementation-active`, report the next action as "collect/verify worker evidence" rather than "continue implementation."
 - If completed worker threads, merged branches, or completed worktrees remain, route to `/orchestrator:cleanup`.
 
 ## Status Report Template

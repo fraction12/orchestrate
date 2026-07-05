@@ -73,6 +73,8 @@ Create or identify:
 - Intake Thread: local `main`, same repo, no worktree. Purpose: task-tracker-agnostic requirements intake, `ce-brainstorm`, `ce-plan`, ticket/doc grooming.
 - UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
 
+Persistent setup threads must verify they are on the repo default branch before doing role work. If the shared checkout has moved to a plan, worker, or integration branch, Intake/UAT must stop and ask ORCHESTRATOR for a clean default-branch checkout or explicit permission to switch. They must not run intake/UAT against an active implementation branch merely because their cwd points at the canonical repo path.
+
 Before creating Intake or UAT, check the private ledger and any explicit thread ids the user supplied for existing usable setup threads. A setup thread is usable only when `thread-lifecycle.md` says it has positive active proof. Archived, unreadable, missing, wrong-role, or merely found-by-title threads are not usable. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist and have positive active proof for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT when usable active setup threads exist.
 
 If the ledger points at archived Intake or UAT threads, or if the user says those setup threads were archived, do not reuse those ids even when Codex can still find them. Mark the old ledger entries `archived`/`stale`, create replacement Intake/UAT threads, and write the new ids or pending ids back to the ledger.
@@ -86,7 +88,7 @@ Intake thread seed:
 ```text
 Use /orchestrator:intake.
 
-You are the INTAKE thread for this repo. Stay on local main. Own task-tracker-agnostic requirement capture, ticket/doc grooming, ce-brainstorm, and ce-plan. Read references/intake.md from the Orchestrator skill. Do not implement code. Do not ask ORCHESTRATOR to start work unless the user explicitly chooses that after intake output is ready.
+You are the INTAKE thread for this repo. Stay on local main/default branch. Before role work, verify the current branch is the repo default branch; if not, stop and ask ORCHESTRATOR for a clean default-branch checkout or explicit switch permission. Own task-tracker-agnostic requirement capture, ticket/doc grooming, ce-brainstorm, and ce-plan. Read references/intake.md from the Orchestrator skill. Do not implement code. Do not ask ORCHESTRATOR to start work unless the user explicitly chooses that after intake output is ready.
 ```
 
 UAT thread seed:
@@ -94,7 +96,7 @@ UAT thread seed:
 ```text
 Use /orchestrator:uat.
 
-You are the UAT thread for this repo. Stay on local main. Read references/uat.md from the Orchestrator skill. When ORCHESTRATOR sends a ready PR, inspect the PR scope, verification evidence, screenshots/browser notes when relevant, and produce user-facing acceptance/blocker notes. Do not merge or edit implementation code unless explicitly asked.
+You are the UAT thread for this repo. Stay on local main/default branch. Before UAT work, verify the current branch is the repo default branch; if not, stop and ask ORCHESTRATOR for a clean default-branch checkout or explicit switch permission. Read references/uat.md from the Orchestrator skill. When ORCHESTRATOR sends a ready PR, inspect the PR scope, verification evidence, screenshots/browser notes when relevant, and produce user-facing acceptance/blocker notes. Do not merge or edit implementation code unless explicitly asked.
 ```
 
 ## Phase 4: Rename Threads

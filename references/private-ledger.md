@@ -65,6 +65,15 @@ Minimum top-level fields:
 
 Preserve unknown fields when updating. When the skill expects a newer schema, migrate forward in memory, write a `.bak` copy, then write the upgraded state.
 
+For every active lane, preserve reconciliation fields when known:
+
+- `baseRef` or base commit used for ahead/behind checks
+- `lastVerifiedCommit`
+- `branchDirtyState`
+- `workerEvidenceState` such as `missing`, `worker-reported`, `needs-collection`, `verified`, or `incomplete`
+- `automationStatus` such as `active`, `lost`, `stale`, `orphaned`, or `unknown`
+- `lastReconciledAt`
+
 ## Worker Thread Correlation
 
 For every worker create request, record enough data to resolve the worker without broad thread discovery:
@@ -95,6 +104,10 @@ Mark ledger entries stale when:
 - A worker thread cannot be read.
 - A setup thread is archived, unreadable, wrong-role, or explicitly replaced.
 - An automation points to a missing or completed unit.
+- The ledger records an active automation id but the automation tool/files cannot find it.
+- The automation name/id in live state does not match the ledger's recorded id/name for the same unit/lane.
+- A worker branch has commits ahead of the recorded base or uncommitted diffs that the lane state has not recorded.
+- A worker thread is idle with unread output while the lane still lacks verified evidence.
 - `updatedAt` is older than the heartbeat cadence and active work exists.
 
 Stale is not failed. Reconstruct from git, PRs, threads, and automations before asking the user.

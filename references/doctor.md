@@ -17,6 +17,8 @@ Run these checks:
 - Ledger-known setup threads are usable, active, and not archived; archived Intake/UAT threads should be marked stale and recreated by setup.
 - Thread titles are `ORCHESTRATOR`, `INTAKE`, and `UAT`.
 - Worker threads for active lanes follow `WORKER <lane-id> - <short work name>` when their ids are available.
+- Active automation ids in the ledger exist, target the expected threads, and use the same lane id/name normalization as the ledger.
+- Intake and UAT setup threads are on, or explicitly able to reach, the repo default branch before role work.
 - Doctor avoids broad `list_threads`; missing thread ids are reported as pending/manual recovery instead of scanning all Codex threads.
 - Doctor may run bounded worker resolution for workers created in the current run when the ledger has correlation fields. It should map resolved threads back to lanes, rename them to canonical worker titles, and record `threadResolutionSource`.
 - Cleanup command is installed and can be routed for completed residue.
@@ -35,6 +37,8 @@ Apply without asking when clearly safe:
 - Mark archived/unusable setup thread ledger entries stale and route to setup for replacement.
 - Rename active worker threads to stable `WORKER ...` titles when thread ids and lane ids are known.
 - Add missing non-secret ledger fields while preserving unknown fields.
+- Mark missing active heartbeat automations as `lost-automation` instead of leaving them `active`.
+- Normalize future automation naming guidance in the ledger when names drift, but do not rename/delete live automations unless the exact id and target thread are verified.
 
 Doctor must not unarchive setup threads or use archived setup threads as active. If the user archived INTAKE or UAT, doctor should mark the ledger stale and route setup to create fresh replacements.
 
