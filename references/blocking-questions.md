@@ -92,9 +92,19 @@ Question: "Where should the worker take requirements from?"
 
 Question: "How should worker lanes run?"
 
-1. Serial (recommended when shared files or uncertain dependencies exist).
-2. Limited parallel: up to two or three lanes with disjoint file ownership.
+1. Dependency-aware parallel (recommended): run safe dependency layers in worktree workers up to the setup limit.
+2. Serial: use only when shared files, env limits, or uncertain dependencies require it.
 3. Campaign loop: keep creating the next safe PR-sized lane after each merge.
+
+### Single Ticket Split
+
+Ask when one ticket appears large or separable.
+
+Question: "Should this single ticket stay one lane or become a parallel campaign?"
+
+1. Split into a parallel campaign (recommended for separable work): create/confirm a parent plan, derive child lanes, and require child plans before implementation.
+2. Keep as one lane: use one worker/PR chain.
+3. Send to Intake first: clarify requirements before deciding.
 
 ### UAT Routing For This Run
 

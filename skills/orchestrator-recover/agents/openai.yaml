@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Recover"
+  short_description: "Recover orchestration work"
+  default_prompt: "Use $orchestrator-recover to reconstruct stale orchestration state and produce safe repairs."

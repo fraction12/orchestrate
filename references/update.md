@@ -46,6 +46,8 @@ The update must leave exactly these top-level user-scope Orchestrator skills:
 - `orchestrate`
 - `orchestrator-setup`
 - `orchestrator-status`
+- `orchestrator-recover`
+- `orchestrator-doctor`
 - `orchestrator-update`
 
 The canonical `orchestrate` install must not include nested `skills/*/SKILL.md` wrappers.

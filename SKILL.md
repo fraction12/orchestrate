@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering requirements intake, CE planning, worker execution, review subagents, PR creation, UAT, merge policy, automation, status, cleanup, and repo-backed skill updates. Requires the Compound Engineering skill set for setup/execution; stop and request/install CE if missing. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, /orchestrator:update, asks to orchestrate ready Linear/GitHub tickets, asks to update the Orchestrator skill from GitHub, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
+description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering requirements intake, CE planning, dependency-aware parallel worktree workers, review subagents, PR creation, UAT, merge policy, automation, recovery, doctor health checks, status, cleanup, and repo-backed skill updates. Requires the Compound Engineering skill set for setup/execution; stop and request/install CE if missing. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, /orchestrator:recover, /orchestrator:doctor, /orchestrator:update, asks to orchestrate ready Linear/GitHub tickets, asks to recover orchestration work, asks to check/fix orchestrator setup health, asks to update the Orchestrator skill from GitHub, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
 ---
 
 # Orchestrate
@@ -18,6 +18,8 @@ Recognize these commands and route immediately:
 - `/orchestrator:setup` - establish the orchestration operating model for this repo. Read `references/setup.md`.
 - `/orchestrate` - run one orchestration unit through planning, workers, review, PR, UAT, merge policy, and cleanup. Read `references/execution.md`.
 - `/orchestrator:status` - report current or latest orchestration state. Read `references/status.md`.
+- `/orchestrator:recover` - reconstruct and repair interrupted or stale orchestration work. Read `references/recover.md`.
+- `/orchestrator:doctor` - check and fix Orchestrator setup health. Read `references/doctor.md`.
 - `/orchestrator:update` - update the installed user-scope Orchestrator skills from the latest GitHub repo version. Read `references/update.md`.
 
 If the user says "orchestrate this" without a slash command, treat it as `/orchestrate`.
@@ -27,6 +29,8 @@ Normalize common aliases before routing:
 - `/ochestrate` or `/orchestrator:run` -> `/orchestrate`.
 - `/ochestrator:setup` -> `/orchestrator:setup`.
 - `/ochestrator:status` -> `/orchestrator:status`.
+- `/ochestrator:recover` -> `/orchestrator:recover`.
+- `/ochestrator:doctor` -> `/orchestrator:doctor`.
 - `/ochestrator:update` -> `/orchestrator:update`.
 
 ## Non-Negotiables
@@ -42,6 +46,7 @@ Normalize common aliases before routing:
 - Do not merge, archive, delete worktrees, mark issues done, or stop heartbeats merely because a worker says it finished.
 - Carry plan alignment forward at every handoff. Every worker lane must know its source plan, unit IDs, requirement IDs, non-goals, drift stops, and verification gates.
 - Treat CE skills as subroutines. The orchestrator owns the tail unless the user explicitly hands ownership to another workflow.
+- Prefer dependency-aware parallel worktree workers for ticket sets and campaigns. Use serial execution only when dependencies, shared files, or env limits require it.
 
 ## Baked-In Defaults
 
@@ -51,7 +56,7 @@ When no `ORCHESTRATOR.md` exists, use this default contract:
 - Requirements live in an issue, a plan, or an explicitly confirmed user brief before implementation begins.
 - If no implementation-ready plan exists, run or hand off to `ce-plan` before `ce-work`.
 - Work is sliced into small PR-sized chunks.
-- One worker is the default; use up to three only when file ownership and verification resources are clean.
+- One worker is the default for truly single-lane work; ticket sets and campaigns should use as much safe parallelism as dependency analysis allows.
 - Workers implement; the orchestrator integrates.
 - Worker heartbeats are worker-owned and compact.
 - The main orchestrator heartbeat tracks active lanes and routes ready PRs to UAT.
@@ -91,6 +96,7 @@ When running `/orchestrator:setup`:
 - Offer to create or update `ORCHESTRATOR.md`; do not require it.
 - Create no implementation worker during setup.
 - Use `references/private-ledger.md` for repo id derivation, safe local-vs-CODEX_HOME storage, locking, stale detection, and schema upgrades.
+- Use `references/parallel-orchestration.md` to capture default parallelism policy and worktree/worker limits.
 
 Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `set_thread_title`, `set_thread_archived`, and `automation_update`.
 
@@ -99,8 +105,10 @@ Use Codex thread tools when available. If they are not loaded, search for `creat
 When running `/orchestrate`:
 
 - Verify the Compound Engineering dependency first. If missing, stop for install.
+- If setup/ledger/thread health is missing or broken, route to `/orchestrator:doctor` or `/orchestrator:setup` before launching workers.
 - Discover repo root, current branch, dirty state, existing plans, active issues, active worktrees, active threads, and active automations.
 - Classify the orchestration unit as a single ticket, ticket set, or campaign.
+- Use `references/parallel-orchestration.md` to decide whether to run a ticket set/campaign in parallel worktrees or ask whether a single ticket should become a parallel campaign.
 - Ensure requirements are durable enough. If not, route to Intake or `ce-brainstorm`/`ce-plan` before implementation.
 - Enforce the alignment contract before worker launch: implementation-ready source, traceable unit IDs, explicit non-goals, drift stops, and verification gates.
 - Build or update a private ledger entry before creating workers.
@@ -114,6 +122,24 @@ When running `/orchestrate`:
 - Notify the UAT thread when a PR is ready for user validation.
 - Watch checks when policy requires it, then merge only under explicit user or setup policy.
 - Clean up after merge, cancellation, or deferral.
+
+## Recovery Responsibilities
+
+When running `/orchestrator:recover`:
+
+- Read `references/recover.md`.
+- Reconstruct current/latest orchestration state from ledger, threads, automations, worktrees, branches, PRs, and issue tracker.
+- Repair safe stale state only under recorded policy; otherwise produce an explicit recovery plan.
+- Do not launch new implementation work unless recovery concludes the unit is healthy and the user asks to resume.
+
+## Doctor Responsibilities
+
+When running `/orchestrator:doctor`:
+
+- Read `references/doctor.md`.
+- Check CE availability, user-scope skill install, update script, repo setup, ledger, setup threads/titles, thread tools, automation tools, worktree/env policy, and GitHub auth.
+- Fix safe setup drift when possible and report manual blockers.
+- Route to `/orchestrator:setup` when setup is missing and the user wants to initialize it.
 
 ## Status Responsibilities
 
@@ -142,6 +168,9 @@ When running `/orchestrator:update`:
 - `references/compound-engineering-dependency.md` - required CE skills and install-gate behavior.
 - `references/setup.md` - `/orchestrator:setup` wizard and private state.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
+- `references/parallel-orchestration.md` - dependency-aware parallel worktree and worker policy.
+- `references/recover.md` - `/orchestrator:recover` state reconstruction and repair behavior.
+- `references/doctor.md` - `/orchestrator:doctor` setup health checks and safe fixes.
 - `references/private-ledger.md` - private state location, repo id, locking, stale detection, and schema upgrades.
 - `references/automation-lifecycle.md` - heartbeat automation names, payloads, lifecycle, and recovery.
 - `references/alignment-contract.md` - plan readiness, U-ID/R-ID traceability, and drift stop rules.

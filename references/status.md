@@ -5,6 +5,7 @@
 ## Contents
 
 - Source Order
+- Recovery And Doctor Handoff
 - Status Shape
 - Required Truth Labels
 - Recovery Behavior
@@ -24,6 +25,10 @@ Read `compound-engineering-dependency.md` and report CE availability, but do not
 7. Recent plans or campaign docs.
 
 If the ledger is missing or stale, reconstruct best effort and label each recovered fact.
+
+## Recovery And Doctor Handoff
+
+Status reports facts only. If the user asks to fix stale orchestration state, route to `/orchestrator:recover`. If setup health is missing or degraded, route to `/orchestrator:doctor`. Do not perform repairs from status unless the user explicitly asks and the requested repair is already covered by policy.
 
 ## Status Shape
 

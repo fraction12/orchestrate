@@ -6,6 +6,7 @@
 
 - Phase 0: Resume Or Classify
 - Phase 0A: Compound Engineering Gate
+- Phase 0B: Setup Health Routing
 - Phase 1: Intake And Readiness
 - Phase 2: Plan Or Campaign Contract
 - Phase 3: Worker Launch
@@ -32,6 +33,16 @@ If unclear, ask the Orchestration Unit blocking question.
 ## Phase 0A: Compound Engineering Gate
 
 Read `compound-engineering-dependency.md` and verify required CE skills. If any required skill is missing, stop before planning, Intake handoff, worker creation, review, PR, UAT, or cleanup changes. Request/install Compound Engineering when the platform supports it, otherwise tell the user to install it and restart Codex.
+
+## Phase 0B: Setup Health Routing
+
+If setup is missing, partial, or contradictory:
+
+- Route to `/orchestrator:setup` when no setup ledger/threads exist.
+- Route to `/orchestrator:doctor` when partial setup exists or health is degraded.
+- Route to `/orchestrator:recover` when active work exists but state is stale.
+
+Do not launch workers until the setup path is healthy enough to track them.
 
 ## Phase 1: Intake And Readiness
 
@@ -60,6 +71,8 @@ If readiness is missing:
 
 If using CE skills during readiness, read `ce-subroutine-contract.md` first. The orchestrator owns the tail: CE planning can create or enrich the plan, but worker launch, review routing, UAT notification, merge policy, and cleanup stay with `/orchestrate`.
 
+Read `parallel-orchestration.md` before deciding concurrency.
+
 ## Phase 2: Plan Or Campaign Contract
 
 Single ticket:
@@ -67,12 +80,13 @@ Single ticket:
 - Use an existing implementation-ready plan or run `ce-plan`.
 - Confirm worker scope, verification, and UAT route.
 - Read `alignment-contract.md` and create a lane packet with source plan, U-IDs, R/F/AE/KTD references, non-goals, drift stops, and verification gates.
+- If the ticket is large or has separable implementation units, ask whether to split it into a parallel campaign. If splitting, create/confirm the parent plan first, then require child plans for worker lanes.
 
 Ticket set:
 
 - Build or update a campaign plan with inventory, dependencies, lane ownership, stop conditions, verification, and definition of done.
 - Sequence shared primitives first.
-- Parallelize only disjoint file ownership.
+- Parallelize safe dependency layers in worktrees/workers by default.
 - Require every lane to map to a plan unit, ticket, or explicit campaign slice. Do not allow generic "cleanup" lanes without a traceable objective.
 
 Campaign:
@@ -81,6 +95,7 @@ Campaign:
 - Define scoreboard/backlog boundary, current slice selection rule, stop/continue rules, and status cadence.
 - Keep automation prompt compact and point to the campaign state.
 - Keep each loop iteration PR-sized and traceable to the campaign boundary. Update the ledger rather than editing plan progress checkboxes.
+- Use parallel workers for independent campaign slices whenever dependency and env limits allow.
 
 ## Phase 3: Worker Launch
 
@@ -183,11 +198,15 @@ For automations, read `automation-lifecycle.md` and delete only heartbeats whose
 
 Optimize for one clean PR or one small PR chain. Avoid creating a campaign doc unless the work grows.
 
+When the user chooses to split, promote the single ticket into a campaign and track parent/child plans explicitly.
+
 ### Ticket Set
 
 Track each ticket as a lane. Status should show ticket, plan, worker, branch, PR, UAT, blocker, and next action.
 
 For combined UAT, keep a separate integration lane in the ledger instead of overloading a work lane.
+
+Use dependency-layer parallelism by default.
 
 ### Campaign
 

@@ -25,6 +25,7 @@ Read:
 - Existing private orchestration ledger if present.
 - `compound-engineering-dependency.md` before creating threads or writing setup state.
 - `private-ledger.md` before deciding where state belongs.
+- `parallel-orchestration.md` before asking concurrency/worktree questions.
 
 Determine:
 
@@ -47,6 +48,7 @@ Use `blocking-questions.md`. Ask one setup question at a time:
 3. QA policy.
 4. Heartbeat cadence.
 5. PR shipping authority.
+6. Max safe parallel worker count and shared resource limits.
 
 If Final UAT is combined or hybrid and repo policy does not already define integration behavior, also ask Combined UAT Strategy.
 
@@ -130,7 +132,9 @@ Minimum state shape:
     "qa": "standard",
     "workerHeartbeat": "5m",
     "mainHeartbeat": "10m",
-    "shippingAuthority": "open-pr-notify-uat"
+    "shippingAuthority": "open-pr-notify-uat",
+    "maxParallelWorkers": 3,
+    "sharedResourceLimits": []
   },
   "automations": [],
   "activeUnits": [],

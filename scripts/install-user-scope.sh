@@ -22,12 +22,22 @@ rsync -a --delete \
   "$skills_dir/orchestrator-status/"
 
 rsync -a --delete \
+  "$repo_root/skills/orchestrator-recover/" \
+  "$skills_dir/orchestrator-recover/"
+
+rsync -a --delete \
+  "$repo_root/skills/orchestrator-doctor/" \
+  "$skills_dir/orchestrator-doctor/"
+
+rsync -a --delete \
   "$repo_root/skills/orchestrator-update/" \
   "$skills_dir/orchestrator-update/"
 
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrate"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-setup"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-status"
+python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-recover"
+python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-doctor"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-update"
 
-echo "Installed orchestrate, orchestrator-setup, orchestrator-status, and orchestrator-update into $skills_dir"
+echo "Installed orchestrate, orchestrator-setup, orchestrator-status, orchestrator-recover, orchestrator-doctor, and orchestrator-update into $skills_dir"

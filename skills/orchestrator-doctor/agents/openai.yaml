@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Doctor"
+  short_description: "Check orchestrator health"
+  default_prompt: "Use $orchestrator-doctor to check and fix Orchestrator setup health."
