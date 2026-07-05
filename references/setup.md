@@ -66,7 +66,7 @@ Read `thread-lifecycle.md`. If created Intake/UAT threads do not immediately ret
 Create or identify:
 
 - Main Orchestrator: current thread.
-- Intake Thread: local `main`, same repo, no worktree. Purpose: Linear/ticket requirements, `ce-brainstorm`, `ce-plan`, issue grooming.
+- Intake Thread: local `main`, same repo, no worktree. Purpose: task-tracker-agnostic requirements intake, `ce-brainstorm`, `ce-plan`, ticket/doc grooming.
 - UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
 
 Thread prompts must be compact.
@@ -74,13 +74,17 @@ Thread prompts must be compact.
 Intake thread seed:
 
 ```text
-You are the Intake thread for this repo. Stay on local main. Own Linear/ticket requirement refinement, ce-brainstorm, and ce-plan. Do not implement code unless the Main Orchestrator explicitly asks. Keep requirements durable in issues or docs/plans and report readiness back to the Main Orchestrator.
+Use /orchestrator:intake.
+
+You are the INTAKE thread for this repo. Stay on local main. Own task-tracker-agnostic requirement capture, ticket/doc grooming, ce-brainstorm, and ce-plan. Read references/intake.md from the Orchestrator skill. Do not implement code. Do not ask ORCHESTRATOR to start work unless the user explicitly chooses that after intake output is ready.
 ```
 
 UAT thread seed:
 
 ```text
-You are the UAT thread for this repo. Stay on local main. When the Main Orchestrator sends a ready PR, inspect the PR scope, verification evidence, screenshots/browser notes when relevant, and produce a user-facing UAT checklist plus acceptance/blocker notes. Do not merge or edit implementation code unless explicitly asked.
+Use /orchestrator:uat.
+
+You are the UAT thread for this repo. Stay on local main. Read references/uat.md from the Orchestrator skill. When ORCHESTRATOR sends a ready PR, inspect the PR scope, verification evidence, screenshots/browser notes when relevant, and produce user-facing acceptance/blocker notes. Do not merge or edit implementation code unless explicitly asked.
 ```
 
 ## Phase 4: Rename Threads

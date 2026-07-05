@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: UAT"
+  short_description: "Validate PRs for user acceptance"
+  default_prompt: "Use $orchestrator-uat to validate ready PRs and produce acceptance or blocker notes."

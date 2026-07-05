@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering requirements intake, CE planning, dependency-aware parallel worktree workers, review subagents, PR creation, UAT, merge policy, automation, recovery, doctor health checks, status, cleanup, and repo-backed skill updates. Requires the Compound Engineering skill set for setup/execution; stop and request/install CE if missing. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, /orchestrator:recover, /orchestrator:doctor, /orchestrator:update, asks to orchestrate ready Linear/GitHub tickets, asks to recover orchestration work, asks to check/fix orchestrator setup health, asks to update the Orchestrator skill from GitHub, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
+description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering planning, dependency-aware worktree workers, review, PR, UAT, merge policy, automation, recovery, doctor checks, status, cleanup, and repo-backed updates. Requires the Compound Engineering skill set for setup/execution. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:intake, /orchestrator:uat, /orchestrator:status, /orchestrator:recover, /orchestrator:doctor, /orchestrator:update, asks Intake to create/groom requirements, asks UAT to validate a PR, asks to recover or health-check orchestration, asks to update the skill from GitHub, asks to run worktree workers, wants an orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving.
 ---
 
 # Orchestrate
@@ -16,6 +16,8 @@ This skill requires Compound Engineering. Before `/orchestrator:setup` or `/orch
 Recognize these commands and route immediately:
 
 - `/orchestrator:setup` - establish the orchestration operating model for this repo. Read `references/setup.md`.
+- `/orchestrator:intake` - run the Intake role for task-tracker-agnostic ticket/requirements creation and grooming. Read `references/intake.md`.
+- `/orchestrator:uat` - run the UAT role for PR acceptance testing and user-facing validation. Read `references/uat.md`.
 - `/orchestrate` - run one orchestration unit through planning, workers, review, PR, UAT, merge policy, and cleanup. Read `references/execution.md`.
 - `/orchestrator:status` - report current or latest orchestration state. Read `references/status.md`.
 - `/orchestrator:recover` - reconstruct and repair interrupted or stale orchestration work. Read `references/recover.md`.
@@ -27,6 +29,8 @@ If the user says "orchestrate this" without a slash command, treat it as `/orche
 Normalize common aliases before routing:
 
 - `/ochestrate` or `/orchestrator:run` -> `/orchestrate`.
+- `/orchestrate:intake` or `/ochestrator:intake` -> `/orchestrator:intake`.
+- `/orchestrate:uat` or `/ochestrator:uat` -> `/orchestrator:uat`.
 - `/ochestrator:setup` -> `/orchestrator:setup`.
 - `/ochestrator:status` -> `/orchestrator:status`.
 - `/ochestrator:recover` -> `/orchestrator:recover`.
@@ -89,7 +93,7 @@ When running `/orchestrator:setup`:
 
 - Verify the Compound Engineering dependency first. If missing, stop for install.
 - Mark the current thread as the Main Orchestrator in private state.
-- Create an Intake thread on local `main` for Linear/ticket requirements, `ce-brainstorm`, and `ce-plan`.
+- Create an Intake thread on local `main` for task-tracker-agnostic requirements intake, ticket/doc grooming, `ce-brainstorm`, and `ce-plan`.
 - Create a UAT thread on local `main` for PR acceptance testing and user-facing validation.
 - Rename the Main Orchestrator thread to `ORCHESTRATOR`, the Intake thread to `INTAKE`, and the UAT thread to `UAT` so the user can find them in the Codex app.
 - Store thread ids and setup policy in a private ledger. Prefer `.codex/orchestrator/state.json` only when it is ignored/local; otherwise use `$CODEX_HOME/orchestrator-state/<repo-id>/state.json`.
@@ -100,6 +104,24 @@ When running `/orchestrator:setup`:
 - Use `references/parallel-orchestration.md` to capture default parallelism policy and worktree/worker limits.
 
 Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `set_thread_title`, `set_thread_archived`, and `automation_update`.
+
+## Intake Responsibilities
+
+When running `/orchestrator:intake`:
+
+- Read `references/intake.md`.
+- Detect available task tracking systems and repo documentation conventions.
+- Ask a first-use preflight blocking question for where to capture tickets/requirements when unclear.
+- Create or refine durable tickets, markdown requirements, brainstorms, or plans.
+- Do not ask ORCHESTRATOR to start work unless the user explicitly chooses that after intake output is ready.
+
+## UAT Responsibilities
+
+When running `/orchestrator:uat`:
+
+- Read `references/uat.md`.
+- Validate ready PRs from the user-facing UAT perspective using the PR packet, verification evidence, and suggested checks.
+- Produce acceptance/blocker notes without merging or editing implementation code.
 
 ## Execution Responsibilities
 
@@ -160,7 +182,7 @@ When running `/orchestrator:update`:
 
 - Do not require Compound Engineering first.
 - Read `references/update.md`.
-- Update from the canonical private GitHub repo into user-scope skills.
+- Update from the canonical GitHub repo into user-scope skills.
 - Validate the installed canonical skill and wrapper skills.
 - Report the installed commit/ref and remind the user to restart Codex.
 
@@ -169,6 +191,8 @@ When running `/orchestrator:update`:
 - `references/blocking-questions.md` - required question discipline and menus.
 - `references/compound-engineering-dependency.md` - required CE skills and install-gate behavior.
 - `references/setup.md` - `/orchestrator:setup` wizard and private state.
+- `references/intake.md` - `/orchestrator:intake` task-tracker-agnostic intake behavior.
+- `references/uat.md` - `/orchestrator:uat` PR acceptance testing behavior.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
 - `references/parallel-orchestration.md` - dependency-aware parallel worktree and worker policy.
 - `references/thread-lifecycle.md` - thread creation wait behavior, stable titles, and worker naming.

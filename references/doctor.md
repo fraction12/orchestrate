@@ -6,7 +6,7 @@
 
 Run these checks:
 
-- Orchestrator user-scope skills installed: `orchestrate`, `orchestrator-setup`, `orchestrator-status`, `orchestrator-recover`, `orchestrator-doctor`, `orchestrator-update`.
+- Orchestrator user-scope skills installed: `orchestrate`, `orchestrator-setup`, `orchestrator-intake`, `orchestrator-uat`, `orchestrator-status`, `orchestrator-recover`, `orchestrator-doctor`, `orchestrator-update`.
 - Installed skills validate.
 - Update script exists and can run in dry or version-discovery mode when possible.
 - Compound Engineering dependency is available or installable.

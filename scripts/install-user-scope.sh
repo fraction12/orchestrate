@@ -18,6 +18,14 @@ rsync -a --delete \
   "$skills_dir/orchestrator-setup/"
 
 rsync -a --delete \
+  "$repo_root/skills/orchestrator-intake/" \
+  "$skills_dir/orchestrator-intake/"
+
+rsync -a --delete \
+  "$repo_root/skills/orchestrator-uat/" \
+  "$skills_dir/orchestrator-uat/"
+
+rsync -a --delete \
   "$repo_root/skills/orchestrator-status/" \
   "$skills_dir/orchestrator-status/"
 
@@ -35,9 +43,11 @@ rsync -a --delete \
 
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrate"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-setup"
+python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-intake"
+python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-uat"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-status"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-recover"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-doctor"
 python3 "$codex_home/skills/.system/skill-creator/scripts/quick_validate.py" "$skills_dir/orchestrator-update"
 
-echo "Installed orchestrate, orchestrator-setup, orchestrator-status, orchestrator-recover, orchestrator-doctor, and orchestrator-update into $skills_dir"
+echo "Installed orchestrate, orchestrator-setup, orchestrator-intake, orchestrator-uat, orchestrator-status, orchestrator-recover, orchestrator-doctor, and orchestrator-update into $skills_dir"

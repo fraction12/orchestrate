@@ -1,6 +1,6 @@
 ---
 name: orchestrator-update
-description: Update the installed Orchestrator user-scope skills from the latest private GitHub repo version. Use when the user invokes /orchestrator:update, /ochestrator:update, asks to update or refresh the Orchestrator skill, or wants the local Codex skill install synced from fraction12/orchestrate.
+description: Update the installed Orchestrator user-scope skills from the latest GitHub repo version. Use when the user invokes /orchestrator:update, /ochestrator:update, asks to update or refresh the Orchestrator skill, or wants the local Codex skill install synced from fraction12/orchestrate.
 ---
 
 # Orchestrator Update

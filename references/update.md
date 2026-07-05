@@ -33,7 +33,7 @@ Allow overrides only when explicitly provided:
 
 ## Failure Handling
 
-If GitHub auth fails, tell the user to authenticate with GitHub for the private repo and rerun `/orchestrator:update`.
+If GitHub auth fails, tell the user to authenticate with GitHub if the selected repo/ref requires it and rerun `/orchestrator:update`.
 
 If validation fails, stop and report the failing skill path. Do not partially invent fixes.
 
@@ -45,6 +45,8 @@ The update must leave exactly these top-level user-scope Orchestrator skills:
 
 - `orchestrate`
 - `orchestrator-setup`
+- `orchestrator-intake`
+- `orchestrator-uat`
 - `orchestrator-status`
 - `orchestrator-recover`
 - `orchestrator-doctor`

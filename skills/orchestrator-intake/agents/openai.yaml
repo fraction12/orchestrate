@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Intake"
+  short_description: "Create and groom requirements"
+  default_prompt: "Use $orchestrator-intake to create or refine tickets, requirements, docs, brainstorms, and plans."
