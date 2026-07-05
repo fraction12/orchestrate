@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Cleanup"
+  short_description: "Clean completed orchestration residue"
+  default_prompt: "Use $orchestrator-cleanup to remove completed heartbeats, merged worktrees and branches, and archive finished worker threads."

@@ -5,7 +5,7 @@
 ## Contents
 
 - Source Order
-- Recovery And Doctor Handoff
+- Recovery, Cleanup, And Doctor Handoff
 - Status Shape
 - Required Truth Labels
 - Recovery Behavior
@@ -26,9 +26,9 @@ Read `compound-engineering-dependency.md` and report CE availability, but do not
 
 If the ledger is missing or stale, reconstruct best effort and label each recovered fact.
 
-## Recovery And Doctor Handoff
+## Recovery, Cleanup, And Doctor Handoff
 
-Status reports facts only. If the user asks to fix stale orchestration state, route to `/orchestrator:recover`. If setup health is missing or degraded, route to `/orchestrator:doctor`. Do not perform repairs from status unless the user explicitly asks and the requested repair is already covered by policy.
+Status reports facts only. If the user asks to fix stale active orchestration state, route to `/orchestrator:recover`. If the user asks to remove completed residue, route to `/orchestrator:cleanup`. If setup health is missing or degraded, route to `/orchestrator:doctor`. Do not perform repairs from status unless the user explicitly asks and the requested repair is already covered by policy.
 
 ## Status Shape
 
@@ -85,6 +85,7 @@ When status reveals stale state:
 - If a branch is conflicted, check whether it still has unique diff before spending time on conflict repair.
 - If UAT was not notified for a ready PR, notify the UAT thread with the PR packet.
 - If an automation points at a missing thread/branch/unit, mark it stale or orphaned and repair only when policy allows.
+- If completed worker threads, merged branches, or completed worktrees remain, route to `/orchestrator:cleanup`.
 
 ## Status Report Template
 

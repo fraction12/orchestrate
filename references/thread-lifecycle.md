@@ -24,6 +24,8 @@ Setup threads use exact titles:
 - `INTAKE`
 - `UAT`
 
+These three setup threads are persistent. Setup, execution, cleanup, status, and recover must identify and reuse them when they exist. Do not recreate, archive, or delete them as part of normal orchestration cleanup.
+
 Worker threads must be named for the work they own:
 
 ```text

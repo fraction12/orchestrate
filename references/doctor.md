@@ -6,7 +6,7 @@
 
 Run these checks:
 
-- Orchestrator user-scope skills installed: `orchestrate`, `orchestrator-setup`, `orchestrator-intake`, `orchestrator-uat`, `orchestrator-status`, `orchestrator-recover`, `orchestrator-doctor`, `orchestrator-update`.
+- Orchestrator user-scope skills installed: `orchestrate`, `orchestrator-setup`, `orchestrator-intake`, `orchestrator-uat`, `orchestrator-status`, `orchestrator-recover`, `orchestrator-cleanup`, `orchestrator-doctor`, `orchestrator-update`.
 - Installed skills validate.
 - Update script exists and can run in dry or version-discovery mode when possible.
 - Compound Engineering dependency is available or installable.
@@ -16,6 +16,7 @@ Run these checks:
 - Main, Intake, and UAT threads exist when setup has run.
 - Thread titles are `ORCHESTRATOR`, `INTAKE`, and `UAT`.
 - Worker threads for active lanes follow `WORKER <lane-id> - <short work name>` when their ids are available.
+- Cleanup command is installed and can be routed for completed residue.
 - Thread tools, automation tools, and `set_thread_title` availability.
 - Worktree env policy and concurrency policy are recorded.
 - No nested wrapper skills are installed under `orchestrate/skills`.

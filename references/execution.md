@@ -193,6 +193,7 @@ After PR:
 
 After merge, cancellation, or explicit deferral:
 
+- Read `references/cleanup.md` and follow the `/orchestrator:cleanup` safety gates for completed lanes.
 - Delete worker heartbeat.
 - Remove clean/safe worktree.
 - Archive worker thread.
@@ -201,7 +202,7 @@ After merge, cancellation, or explicit deferral:
 - Keep branch cleanup separate unless user/policy explicitly says to delete local/remote branches.
 - Report remaining active state.
 
-For automations, read `automation-lifecycle.md` and delete only heartbeats whose unit/lane is truly complete, canceled, or deliberately parked.
+For automations, read `automation-lifecycle.md` and delete only heartbeats whose unit/lane is truly complete, canceled, or deliberately parked. Leave `ORCHESTRATOR`, `INTAKE`, and `UAT` threads persistent.
 
 ## Unit-Specific Notes
 

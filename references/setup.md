@@ -7,7 +7,7 @@
 - Phase 1: Inspect
 - Phase 1A: Compound Engineering Gate
 - Phase 2: Ask Required Questions
-- Phase 3: Create Threads
+- Phase 3: Create Or Identify Threads
 - Phase 4: Rename Threads
 - Phase 5: Private Ledger
 - Phase 6: Optional ORCHESTRATOR.md
@@ -55,7 +55,7 @@ If Final UAT is combined or hybrid and repo policy does not already define integ
 
 Do not create Intake/UAT threads until these policies are known, unless the user explicitly says to use defaults. If they say "use defaults", record the recommended option for each question.
 
-## Phase 3: Create Threads
+## Phase 3: Create Or Identify Threads
 
 Use Codex thread tools. If not loaded, search for them. Include `set_thread_title`.
 
@@ -68,6 +68,8 @@ Create or identify:
 - Main Orchestrator: current thread.
 - Intake Thread: local `main`, same repo, no worktree. Purpose: task-tracker-agnostic requirements intake, `ce-brainstorm`, `ce-plan`, ticket/doc grooming.
 - UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
+
+Before creating Intake or UAT, check the private ledger and recent Codex threads for existing usable setup threads. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT.
 
 Thread prompts must be compact.
 

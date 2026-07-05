@@ -49,6 +49,7 @@ The update must leave exactly these top-level user-scope Orchestrator skills:
 - `orchestrator-uat`
 - `orchestrator-status`
 - `orchestrator-recover`
+- `orchestrator-cleanup`
 - `orchestrator-doctor`
 - `orchestrator-update`
 

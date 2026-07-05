@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering planning, dependency-aware worktree workers, review, PR, UAT, merge policy, automation, recovery, doctor checks, status, cleanup, and repo-backed updates. Requires the Compound Engineering skill set for setup/execution. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:intake, /orchestrator:uat, /orchestrator:status, /orchestrator:recover, /orchestrator:doctor, /orchestrator:update, asks Intake to create/groom requirements, asks UAT to validate a PR, asks to recover or health-check orchestration, asks to update the skill from GitHub, asks to run worktree workers, wants an orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving.
+description: Run coding orchestration for one ticket, a set, or a campaign through CE planning, worktree workers, review, PR, UAT, merge policy, automation, recovery, doctor checks, cleanup, and updates. Requires Compound Engineering for setup/execution. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:intake, /orchestrator:uat, /orchestrator:status, /orchestrator:recover, /orchestrator:cleanup, /orchestrator:doctor, /orchestrator:update, asks Intake to groom requirements, asks UAT to validate a PR, asks to clean merged worktrees/branches/heartbeats/worker threads, asks to recover or health-check orchestration, asks to update from GitHub, or wants an orchestrator/intake/UAT thread system.
 ---
 
 # Orchestrate
@@ -21,6 +21,7 @@ Recognize these commands and route immediately:
 - `/orchestrate` - run one orchestration unit through planning, workers, review, PR, UAT, merge policy, and cleanup. Read `references/execution.md`.
 - `/orchestrator:status` - report current or latest orchestration state. Read `references/status.md`.
 - `/orchestrator:recover` - reconstruct and repair interrupted or stale orchestration work. Read `references/recover.md`.
+- `/orchestrator:cleanup` - remove completed orchestration residue: heartbeats, worktrees, merged branches, and worker threads. Read `references/cleanup.md`.
 - `/orchestrator:doctor` - check and fix Orchestrator setup health. Read `references/doctor.md`.
 - `/orchestrator:update` - update the installed user-scope Orchestrator skills from the latest GitHub repo version. Read `references/update.md`.
 
@@ -34,6 +35,7 @@ Normalize common aliases before routing:
 - `/ochestrator:setup` -> `/orchestrator:setup`.
 - `/ochestrator:status` -> `/orchestrator:status`.
 - `/ochestrator:recover` -> `/orchestrator:recover`.
+- `/orchestrate:cleanup`, `/ochestrate:cleanup`, or `/ochestrator:cleanup` -> `/orchestrator:cleanup`.
 - `/ochestrator:doctor` -> `/orchestrator:doctor`.
 - `/ochestrator:update` -> `/orchestrator:update`.
 
@@ -93,8 +95,9 @@ When running `/orchestrator:setup`:
 
 - Verify the Compound Engineering dependency first. If missing, stop for install.
 - Mark the current thread as the Main Orchestrator in private state.
-- Create an Intake thread on local `main` for task-tracker-agnostic requirements intake, ticket/doc grooming, `ce-brainstorm`, and `ce-plan`.
-- Create a UAT thread on local `main` for PR acceptance testing and user-facing validation.
+- Reuse existing Main Orchestrator, Intake, and UAT threads from the private ledger or Codex thread lookup when they already exist. Do not recreate persistent setup threads for later `/orchestrate` runs in the same repo.
+- Create an Intake thread on local `main` for task-tracker-agnostic requirements intake, ticket/doc grooming, `ce-brainstorm`, and `ce-plan` only when no usable Intake thread exists.
+- Create a UAT thread on local `main` for PR acceptance testing and user-facing validation only when no usable UAT thread exists.
 - Rename the Main Orchestrator thread to `ORCHESTRATOR`, the Intake thread to `INTAKE`, and the UAT thread to `UAT` so the user can find them in the Codex app.
 - Store thread ids and setup policy in a private ledger. Prefer `.codex/orchestrator/state.json` only when it is ignored/local; otherwise use `$CODEX_HOME/orchestrator-state/<repo-id>/state.json`.
 - Offer to create or update `ORCHESTRATOR.md`; do not require it.
@@ -157,6 +160,17 @@ When running `/orchestrator:recover`:
 - Repair safe stale state only under recorded policy; otherwise produce an explicit recovery plan.
 - Do not launch new implementation work unless recovery concludes the unit is healthy and the user asks to resume.
 
+## Cleanup Responsibilities
+
+When running `/orchestrator:cleanup`:
+
+- Read `references/cleanup.md`.
+- Clean only completed, merged, canceled, or explicitly deferred orchestration residue.
+- Delete matching heartbeat automations and stale UAT follow-ups.
+- Remove clean/safe worker worktrees and delete merged local/remote worker branches when evidence proves they are safe.
+- Archive completed worker threads only. Never archive `ORCHESTRATOR`, `INTAKE`, or `UAT`.
+- Update the private ledger and report anything skipped because it was ambiguous or unsafe.
+
 ## Doctor Responsibilities
 
 When running `/orchestrator:doctor`:
@@ -198,6 +212,7 @@ When running `/orchestrator:update`:
 - `references/parallel-orchestration.md` - dependency-aware parallel worktree and worker policy.
 - `references/thread-lifecycle.md` - thread creation wait behavior, stable titles, and worker naming.
 - `references/recover.md` - `/orchestrator:recover` state reconstruction and repair behavior.
+- `references/cleanup.md` - `/orchestrator:cleanup` completed-work residue removal.
 - `references/doctor.md` - `/orchestrator:doctor` setup health checks and safe fixes.
 - `references/private-ledger.md` - private state location, repo id, locking, stale detection, and schema upgrades.
 - `references/automation-lifecycle.md` - heartbeat automation names, payloads, lifecycle, and recovery.

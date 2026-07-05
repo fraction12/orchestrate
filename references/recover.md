@@ -1,6 +1,6 @@
 # Recover
 
-`/orchestrator:recover` reconstructs and repairs interrupted orchestration work. It is separate from status: status reports, recover acts when policy allows.
+`/orchestrator:recover` reconstructs and repairs interrupted orchestration work. It is separate from status and cleanup: status reports, recover repairs active/stale work, and cleanup removes completed residue.
 
 ## Inputs
 
@@ -38,6 +38,7 @@ Allowed when policy is known:
 - Notify UAT for a ready PR when policy already says to notify.
 - Rename setup threads back to `ORCHESTRATOR`, `INTAKE`, and `UAT`.
 - Rename active worker threads to `WORKER <lane-id> - <short work name>` when lane ids and thread ids are known.
+- Route completed merged residue to `/orchestrator:cleanup` instead of mixing broad cleanup into recovery.
 
 Ask before:
 
