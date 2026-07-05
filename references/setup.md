@@ -61,6 +61,8 @@ Use Codex thread tools. If not loaded, search only for `create_thread`, `send_me
 
 Do not call broad `list_threads` during setup. Large or old Codex histories can make thread listing unstable. Setup must rely on the private ledger, create-thread return values, pending ids, or explicit user-provided thread ids.
 
+Do not call `set_thread_archived` during setup. Setup must never unarchive, restore, reopen, or otherwise bring back archived setup threads. If an archived setup thread is found, create a fresh replacement instead.
+
 If thread tools are unavailable, do not fake thread creation. Record setup as partial, store the missing capability in the ledger, and tell the user that Intake/UAT routing will stay in the Main Orchestrator until tools are available.
 
 Read `thread-lifecycle.md`. If created Intake/UAT threads do not immediately return ids, wait 60 seconds, then record `pending` state instead of listing threads.
@@ -71,9 +73,11 @@ Create or identify:
 - Intake Thread: local `main`, same repo, no worktree. Purpose: task-tracker-agnostic requirements intake, `ce-brainstorm`, `ce-plan`, ticket/doc grooming.
 - UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
 
-Before creating Intake or UAT, check the private ledger and any explicit thread ids the user supplied for existing usable setup threads. A setup thread is usable only when `thread-lifecycle.md` says it is usable. Archived, unreadable, missing, or wrong-role threads are not usable. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist and are usable for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT when usable setup threads exist.
+Before creating Intake or UAT, check the private ledger and any explicit thread ids the user supplied for existing usable setup threads. A setup thread is usable only when `thread-lifecycle.md` says it has positive active proof. Archived, unreadable, missing, wrong-role, or merely found-by-title threads are not usable. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist and have positive active proof for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT when usable active setup threads exist.
 
-If the ledger points at archived Intake or UAT threads, do not reuse those ids. Mark the old ledger entries `archived`/`stale`, create replacement Intake/UAT threads, and write the new ids or pending ids back to the ledger.
+If the ledger points at archived Intake or UAT threads, or if the user says those setup threads were archived, do not reuse those ids even when Codex can still find them. Mark the old ledger entries `archived`/`stale`, create replacement Intake/UAT threads, and write the new ids or pending ids back to the ledger.
+
+If the thread tool does not expose archive state, do not infer active state from the existence of an id, title, or successful lookup. Reuse only when there is positive active proof or the user explicitly confirms the id is active and should be reused.
 
 Thread prompts must be compact.
 

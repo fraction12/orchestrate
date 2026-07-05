@@ -29,15 +29,24 @@ If the only way to find a thread would be broad listing, mark the thread state a
 
 ## Thread Usability
 
-A setup or worker thread id is usable only when all are true:
+A setup or worker thread id is usable only with positive active proof. Positive active proof is one of:
+
+- the thread was created in the current setup/execution run and returned a fresh id;
+- a direct read/metadata result explicitly reports the thread is active and not archived;
+- the user explicitly provides the id and says it is active and should be reused.
+
+In addition, all must be true:
 
 - the id is known from the ledger, a create response, or explicit user input;
-- a direct read/send/title operation against that id is available or not required for the current action;
 - the thread is not archived;
 - the title/role matches the expected role when known;
 - it belongs to the same repo or orchestration unit when that can be verified.
 
-Archived threads are not usable setup threads. If a ledger points to an archived `INTAKE` or `UAT`, setup should mark the old entry `archived` or `stale`, create a replacement thread, and update the ledger. Do not unarchive archived setup threads unless the user explicitly asks.
+Thread existence, matching title, a ledger id, or a successful search result is not positive active proof.
+
+Do not probe a thread by performing an operation that could revive it. In particular, setup must not call `set_thread_archived` and must not send messages to a thread just to learn whether it is archived.
+
+Archived threads are not usable setup threads. If a ledger points to an archived `INTAKE` or `UAT`, or if the user says those threads were archived, setup should mark the old entry `archived` or `stale`, create a replacement thread, and update the ledger. Do not unarchive archived setup threads unless the user explicitly asks to restore that exact archived thread.
 
 ## Stable Titles
 

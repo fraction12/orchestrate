@@ -30,10 +30,12 @@ Apply without asking when clearly safe:
 - Reinstall Orchestrator user-scope skills from the current source checkout.
 - Remove nested duplicate wrapper skills under the canonical install.
 - Re-run skill validation.
-- Rename setup threads to stable titles when thread ids are known and title tool is available.
+- Rename setup threads to stable titles only when thread ids are positively active and title tool is available.
 - Mark archived/unusable setup thread ledger entries stale and route to setup for replacement.
 - Rename active worker threads to stable `WORKER ...` titles when thread ids and lane ids are known.
 - Add missing non-secret ledger fields while preserving unknown fields.
+
+Doctor must not unarchive setup threads or use archived setup threads as active. If the user archived INTAKE or UAT, doctor should mark the ledger stale and route setup to create fresh replacements.
 
 Ask before:
 
