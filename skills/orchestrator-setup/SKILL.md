@@ -23,5 +23,6 @@ If the canonical `orchestrate` skill is missing, stop and tell the user to insta
 
 - Ask required setup questions one at a time.
 - Do not create implementation workers during setup.
+- Rename setup threads to `ORCHESTRATOR`, `INTAKE`, and `UAT` through the canonical setup route.
 - Do not expose private thread ids, automation ids, or local env paths in public docs.
 - Record setup state in the private ledger according to the canonical skill.

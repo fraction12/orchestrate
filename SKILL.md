@@ -80,12 +80,13 @@ When running `/orchestrator:setup`:
 - Mark the current thread as the Main Orchestrator in private state.
 - Create an Intake thread on local `main` for Linear/ticket requirements, `ce-brainstorm`, and `ce-plan`.
 - Create a UAT thread on local `main` for PR acceptance testing and user-facing validation.
+- Rename the Main Orchestrator thread to `ORCHESTRATOR`, the Intake thread to `INTAKE`, and the UAT thread to `UAT` so the user can find them in the Codex app.
 - Store thread ids and setup policy in a private ledger. Prefer `.codex/orchestrator/state.json` only when it is ignored/local; otherwise use `$CODEX_HOME/orchestrator-state/<repo-id>/state.json`.
 - Offer to create or update `ORCHESTRATOR.md`; do not require it.
 - Create no implementation worker during setup.
 - Use `references/private-ledger.md` for repo id derivation, safe local-vs-CODEX_HOME storage, locking, stale detection, and schema upgrades.
 
-Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `set_thread_archived`, and `automation_update`.
+Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `set_thread_title`, `set_thread_archived`, and `automation_update`.
 
 ## Execution Responsibilities
 

@@ -7,8 +7,9 @@
 - Phase 1: Inspect
 - Phase 2: Ask Required Questions
 - Phase 3: Create Threads
-- Phase 4: Private Ledger
-- Phase 5: Optional ORCHESTRATOR.md
+- Phase 4: Rename Threads
+- Phase 5: Private Ledger
+- Phase 6: Optional ORCHESTRATOR.md
 - Setup Completion Report
 
 ## Phase 1: Inspect
@@ -47,7 +48,7 @@ Do not create Intake/UAT threads until these policies are known, unless the user
 
 ## Phase 3: Create Threads
 
-Use Codex thread tools. If not loaded, search for them.
+Use Codex thread tools. If not loaded, search for them. Include `set_thread_title`.
 
 If thread tools are unavailable, do not fake thread creation. Record setup as partial, store the missing capability in the ledger, and tell the user that Intake/UAT routing will stay in the Main Orchestrator until tools are available.
 
@@ -71,7 +72,19 @@ UAT thread seed:
 You are the UAT thread for this repo. Stay on local main. When the Main Orchestrator sends a ready PR, inspect the PR scope, verification evidence, screenshots/browser notes when relevant, and produce a user-facing UAT checklist plus acceptance/blocker notes. Do not merge or edit implementation code unless explicitly asked.
 ```
 
-## Phase 4: Private Ledger
+## Phase 4: Rename Threads
+
+Rename threads immediately after creation or identification:
+
+- Main Orchestrator: `ORCHESTRATOR`
+- Intake Thread: `INTAKE`
+- UAT Thread: `UAT`
+
+Use `set_thread_title` when available. If title updates fail or the tool is unavailable, do not block setup. Record `titleStatus` as `failed` or `unavailable` in the ledger and include the fallback in the setup completion report.
+
+Avoid adding repo names, ticket numbers, or dates to these three setup thread titles. Their job is stable sidebar findability.
+
+## Phase 5: Private Ledger
 
 Read `private-ledger.md`. Persist setup state privately. Prefer `.codex/orchestrator/state.json` only if local/ignored. Otherwise use:
 
@@ -89,9 +102,21 @@ Minimum state shape:
   "repoName": "repo",
   "updatedAt": "iso-8601",
   "threads": {
-    "main": "thread-id",
-    "intake": "thread-id",
-    "uat": "thread-id"
+    "main": {
+      "id": "thread-id",
+      "title": "ORCHESTRATOR",
+      "titleStatus": "set"
+    },
+    "intake": {
+      "id": "thread-id",
+      "title": "INTAKE",
+      "titleStatus": "set"
+    },
+    "uat": {
+      "id": "thread-id",
+      "title": "UAT",
+      "titleStatus": "set"
+    }
   },
   "policies": {
     "finalUat": "hybrid",
@@ -109,7 +134,7 @@ Minimum state shape:
 
 Do not commit this ledger. Do not expose it in public docs.
 
-## Phase 5: Optional ORCHESTRATOR.md
+## Phase 6: Optional ORCHESTRATOR.md
 
 If no `ORCHESTRATOR.md` exists, offer to create one after setup. It should include repo-specific policy and link to durable docs, not local thread ids or private automation ids.
 
@@ -120,6 +145,7 @@ If one exists, offer to update it only when setup decisions materially change re
 Report:
 
 - Main, Intake, and UAT thread ids.
+- Thread titles and any title-setting fallback.
 - Policy decisions.
 - Ledger location.
 - Whether `ORCHESTRATOR.md` was created, updated, left unchanged, or skipped.
