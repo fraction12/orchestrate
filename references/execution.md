@@ -110,18 +110,19 @@ WORKER <lane-id> - <short work name>
 Launch pattern:
 
 1. Create worker thread/worktree in standby.
-2. If thread id is not immediately available, wait 60 seconds and record pending state instead of listing threads.
-3. Rename the worker thread to its intended `WORKER ...` title when the id is available.
-4. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
-5. Orchestrator checks worker cwd and worktree env readiness.
-6. Run repo setup script or configured env setup from the orchestrator side when needed.
-7. Send the real implementation prompt.
-8. Create worker heartbeat if the work may continue beyond the current turn.
-9. Record thread id or pending id, thread title, title status, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
+2. Immediately capture every correlation field from the create response: `threadId`, `pendingThreadId`, `pendingWorktreeId`, queued id, create timestamp, expected worker title, branch/worktree, and seed prompt summary.
+3. If thread id is not immediately available, wait 60 seconds and use `thread-lifecycle.md` bounded worker resolution. Do not use broad thread listing.
+4. Rename the worker thread to its intended `WORKER ...` title when the id is available.
+5. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
+6. Orchestrator checks worker cwd and worktree env readiness.
+7. Run repo setup script or configured env setup from the orchestrator side when needed.
+8. Send the real implementation prompt.
+9. Create worker heartbeat if the work may continue beyond the current turn.
+10. Record thread id or pending id, thread title, title status, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
 
 Before creating heartbeats, read `automation-lifecycle.md`. Reuse or update matching automations instead of creating duplicates.
 
-Do not call broad `list_threads` to discover worker threads. If a worker thread id remains pending, keep the lane in pending-thread state and continue only with safe non-thread actions.
+Do not call broad `list_threads` to discover worker threads. Bounded worker resolution is allowed only for a worker created in the current run and only with the correlation fields recorded above. If a worker thread id remains pending, keep the lane in pending-thread state and continue only with safe non-thread actions.
 
 Do not make the worker hand-run setup as its first meaningful task when the orchestrator can prepare the worktree.
 

@@ -48,7 +48,7 @@ Normalize common aliases before routing:
 - Never silently default important policy: UAT shape, merge authority, worktree environment setup, QA depth, worker/main heartbeat cadence, and whether the unit is a single ticket, ticket set, or campaign.
 - Keep prompts compact and point workers to durable context. Do not stuff the whole project transcript into worker prompts or automations.
 - Keep private orchestration state private. Do not publish thread ids, heartbeat ids, internal blocker notes, or local env details in public docs or PR text unless the user explicitly wants that.
-- Do not use broad Codex thread listing as part of setup or routine orchestration. Use ledger-known, create-returned, or user-provided thread ids; if a thread id cannot be resolved safely, record it as pending instead of scanning all threads.
+- Do not use broad Codex thread listing as part of setup or routine orchestration. Use ledger-known, create-returned, or user-provided thread ids. For workers created in the current run, `references/thread-lifecycle.md` allows one bounded resolution lookup using create-response correlation fields; otherwise record unresolved ids as pending instead of scanning all threads.
 - Treat worker claims as untrusted until checked against branch, diff, tests, PR metadata, CI, and visible behavior when relevant.
 - Do not merge, archive, delete worktrees, mark issues done, or stop heartbeats merely because a worker says it finished.
 - Carry plan alignment forward at every handoff. Every worker lane must know its source plan, unit IDs, requirement IDs, non-goals, drift stops, and verification gates.
@@ -141,6 +141,7 @@ When running `/orchestrate`:
 - Build or update a private ledger entry before creating workers.
 - Launch workers only after branch, worktree, and env readiness are checked.
 - Name every worker thread as `WORKER <lane-id> - <short work name>` and handle Codex thread provisioning delays through `references/thread-lifecycle.md`.
+- Capture worker thread create-response correlation fields immediately so the orchestrator can resolve and message the worker it just created.
 - Create compact worker heartbeats and a main orchestrator heartbeat when work continues beyond the current turn.
 - Use `references/automation-lifecycle.md` for heartbeat naming, payload shape, update/delete behavior, and status recovery.
 - Require CE-style evidence from every worker handoff: behavior-change signal, tests inspected, tests added/changed/used unchanged, red failure or characterization evidence when applicable, verification run, and no-test exception reason when applicable.

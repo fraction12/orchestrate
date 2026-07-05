@@ -40,6 +40,7 @@ For a single ticket:
 - Ticket/plan.
 - Source plan readiness and covered unit/requirement IDs.
 - Worker thread title/id and branch.
+- Pending worker correlation fields when a worker thread id is not yet resolved.
 - PR/UAT state.
 - Verification evidence.
 - Review finding state.

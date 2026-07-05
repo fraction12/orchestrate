@@ -27,6 +27,29 @@ Avoid broad `list_threads` in setup, execution, cleanup, status, and recover. Us
 
 If the only way to find a thread would be broad listing, mark the thread state as `pending` or `unknown` and report the exact manual recovery step.
 
+## Bounded Worker Resolution
+
+Worker threads are different from setup threads: the orchestrator often creates them during the current run and must bind the returned thread id back to the lane ledger.
+
+For worker threads created in the current run, a bounded resolution lookup is allowed when all are true:
+
+- the worker create request happened in the current run;
+- the lane id, expected worker title, seed prompt summary, repo root, branch/worktree, and creation timestamp are already recorded;
+- the create response returned a pending id, pending worktree id, queued id, or other correlation token, or the expected worker title is unique inside this orchestration unit;
+- the lookup can be constrained to that correlation token or to this repo/unit/title/time window;
+- at most one lookup attempt is made after the 60-second provisioning wait.
+
+This is not permission for global thread inventory. Do not scan the whole Codex history to discover unrelated threads. If the platform only offers an unfiltered thread list, use it at most once with the smallest available limit/page size and immediately filter to the current run's worker correlation fields; otherwise leave the worker `pendingThreadId` unresolved and report the recovery step.
+
+When a bounded lookup resolves exactly one worker thread:
+
+- record `threadId`;
+- clear or retain `pendingThreadId` as historical evidence;
+- set `threadResolutionSource` to `create-response`, `pending-worktree`, `bounded-lookup`, or `user-provided`;
+- apply the intended `WORKER <lane-id> - <short work name>` title when title tool is available.
+
+If it resolves zero or multiple candidates, do not guess. Keep the lane in `pending-thread` state and ask for the direct worker thread id or retry via `/orchestrator:doctor`.
+
 ## Thread Usability
 
 A setup or worker thread id is usable only with positive active proof. Positive active proof is one of:

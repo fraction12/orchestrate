@@ -65,6 +65,24 @@ Minimum top-level fields:
 
 Preserve unknown fields when updating. When the skill expects a newer schema, migrate forward in memory, write a `.bak` copy, then write the upgraded state.
 
+## Worker Thread Correlation
+
+For every worker create request, record enough data to resolve the worker without broad thread discovery:
+
+- `laneId`
+- `threadId` when returned
+- `pendingThreadId` when returned
+- `pendingWorktreeId` when returned
+- `threadResolutionSource`
+- `threadTitle`
+- `seedPromptSummary`
+- `createdAt`
+- `repoRoot`
+- `branch`
+- `worktree`
+
+Keep these fields even after `threadId` is resolved so recovery can explain how the worker was bound.
+
 ## Stale Detection
 
 Mark ledger entries stale when:
