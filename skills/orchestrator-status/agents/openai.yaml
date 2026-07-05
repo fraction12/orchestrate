@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Status"
+  short_description: "Report current orchestration state"
+  default_prompt: "Use $orchestrator-status to summarize active workers, PRs, UAT, heartbeats, blockers, and next actions."

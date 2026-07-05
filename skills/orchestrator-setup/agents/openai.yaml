@@ -1,0 +1,4 @@
+interface:
+  display_name: "Orchestrator: Setup"
+  short_description: "Set up orchestrator threads and policy"
+  default_prompt: "Use $orchestrator-setup to configure the Main Orchestrator, Intake, UAT, ledger, and policies for this repo."
