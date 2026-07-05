@@ -39,6 +39,14 @@ Question: "How should implementation worktrees get local environment setup?"
 3. No worktrees for env-sensitive work: use local main for measurement-sensitive campaigns.
 4. Ask each run: decide per ticket or campaign.
 
+### Worker Lifecycle
+
+Question: "How should orchestration workers live across work?"
+
+1. Persistent campaign workers (recommended for ongoing campaigns): reuse area-owning worker threads/worktrees across slices and let ORCHESTRATOR create checkpoint PRs.
+2. Ephemeral lanes: create workers per lane and clean them after merge/cancel/defer.
+3. Ask each run: choose persistent or ephemeral during `/orchestrate`.
+
 ### QA Policy
 
 Question: "What QA bar should orchestrated work use by default?"
@@ -92,7 +100,7 @@ Question: "Where should the worker take requirements from?"
 
 Question: "How should worker lanes run?"
 
-1. Dependency-aware parallel (recommended): run safe dependency layers in worktree workers up to the setup limit.
+1. Dependency-aware parallel (recommended): run safe dependency layers in worktree workers up to the setup limit; reuse persistent area workers when policy enables them.
 2. Serial: use only when shared files, env limits, or uncertain dependencies require it.
 3. Campaign loop: keep creating the next safe PR-sized lane after each merge.
 

@@ -60,12 +60,14 @@ For a ticket set:
 - Table of issues with lane, unit IDs, worker title/id, PR, UAT, blocker, evidence, review state, and next action.
 - Shared resource constraints.
 - Final UAT policy and remaining integration work.
+- Worker lifecycle mode and any persistent workers reused for the set.
 
 For a campaign:
 
 - Objective/backlog boundary.
 - Completed PRs.
 - Active lanes.
+- Persistent worker pool: area id, title/id, worktree/branch, state, current slice, latest commit/diff, heartbeat, and integrated-through checkpoint.
 - Parked blockers.
 - Current scoreboard or next slice.
 - Evidence and review coverage by shipped slice.
@@ -97,7 +99,8 @@ When status reveals stale state:
 - If an automation points at a missing thread/branch/unit, mark it stale or orphaned and repair only when policy allows.
 - If the ledger points at an active automation that is missing, mark it `lost-automation`; do not assume the worker is complete or recreate the heartbeat until branch/thread evidence is checked.
 - If a worker branch has a new commit or coherent diff but the lane is still `implementation-active`, report the next action as "collect/verify worker evidence" rather than "continue implementation."
-- If completed worker threads, merged branches, or completed worktrees remain, route to `/orchestrator:cleanup`.
+- If completed ephemeral worker threads, merged branches, or completed ephemeral worktrees remain, route to `/orchestrator:cleanup`.
+- If persistent workers are available/parked after a checkpoint, report them as protected active campaign assets, not cleanup residue.
 
 ## Status Report Template
 

@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run coding orchestration for one ticket, a set, or a campaign through CE planning, worktree workers, review, PR, UAT, merge policy, automation, recovery, doctor checks, cleanup, and updates. Requires Compound Engineering for setup/execution. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:intake, /orchestrator:uat, /orchestrator:status, /orchestrator:recover, /orchestrator:cleanup, /orchestrator:doctor, /orchestrator:update, asks Intake to groom requirements, asks UAT to validate a PR, asks to clean merged worktrees/branches/heartbeats/worker threads, asks to recover or health-check orchestration, asks to update from GitHub, or wants an orchestrator/intake/UAT thread system.
+description: Run coding orchestration for one ticket, a set, or a campaign through CE planning, worktree workers, persistent worker pools, review, checkpoint PRs, UAT, merge policy, automation, recovery, doctor checks, cleanup, and updates. Requires Compound Engineering for setup/execution. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:intake, /orchestrator:uat, /orchestrator:status, /orchestrator:recover, /orchestrator:cleanup, /orchestrator:doctor, /orchestrator:update, asks Intake to groom requirements, asks UAT to validate a PR, asks to clean merged worktrees/branches/heartbeats/worker threads, asks to recover or health-check orchestration, asks to update from GitHub, wants persistent worktree workers, or wants an orchestrator/intake/UAT thread system.
 ---
 
 # Orchestrate
@@ -68,9 +68,10 @@ When no `ORCHESTRATOR.md` exists, use this default contract:
 - Workers implement; the orchestrator integrates.
 - Worker heartbeats are worker-owned and compact.
 - The main orchestrator heartbeat tracks active lanes and routes ready PRs to UAT.
+- Campaigns may use persistent area-owning workers whose threads/worktrees survive multiple slices; the orchestrator creates significant checkpoint PRs for UAT.
 - UAT receives the PR link, scope, verification evidence, screenshots/browser notes when relevant, and specific user-test prompts.
 - Blocked lanes are parked with evidence; unrelated safe lanes continue.
-- Cleanup is part of done: delete worker heartbeat, remove safe worktree, archive worker thread, update issue tracker, and report residual state.
+- Cleanup is part of done: clean ephemeral workers after merge/cancel/defer, but preserve persistent workers until the campaign ends, the worker is retired, or the user asks.
 
 ## Required Blocking Questions
 
@@ -80,6 +81,7 @@ Minimum setup questions:
 
 - Final UAT policy: combined test PR, individual PR UAT, or hybrid.
 - Worktree env setup: repo script, symlink/copy local env, no worktrees for env-sensitive work, or ask per run.
+- Worker lifecycle: ephemeral lanes, persistent campaign workers, or ask per run.
 - QA approach: fast, standard, or strict.
 - Heartbeat cadence: worker and main orchestrator cadence.
 - PR shipping authority: open PR only, notify UAT, merge after UAT approval, or auto-merge under explicit policy.
@@ -107,6 +109,7 @@ When running `/orchestrator:setup`:
 - Use `references/thread-lifecycle.md` for Codex thread provisioning delays and stable thread titles.
 - Use `references/private-ledger.md` for repo id derivation, safe local-vs-CODEX_HOME storage, locking, stale detection, and schema upgrades.
 - Use `references/parallel-orchestration.md` to capture default parallelism policy and worktree/worker limits.
+- Use `references/persistent-workers.md` to capture worker lifecycle policy and persistent worker pool rules.
 
 Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `send_message_to_thread`, `set_thread_title`, and `automation_update`. Do not search for or call broad `list_threads` during setup. Do not use `set_thread_archived` during setup.
 
@@ -137,10 +140,12 @@ When running `/orchestrate`:
 - Discover repo root, current branch, dirty state, existing plans, active issues, active worktrees, active threads, and active automations.
 - Classify the orchestration unit as a single ticket, ticket set, or campaign.
 - Use `references/parallel-orchestration.md` to decide whether to run a ticket set/campaign in parallel worktrees or ask whether a single ticket should become a parallel campaign.
+- Use `references/persistent-workers.md` to decide whether to reuse area-owning workers instead of creating new ephemeral workers.
 - Ensure requirements are durable enough. If not, route to Intake or `ce-brainstorm`/`ce-plan` before implementation.
 - Enforce the alignment contract before worker launch: implementation-ready source, traceable unit IDs, explicit non-goals, drift stops, and verification gates.
 - Build or update a private ledger entry before creating workers.
 - Launch workers only after branch, worktree, and env readiness are checked.
+- Reuse persistent workers before creating new worker threads when setup/run policy enables persistent campaign workers and the worker owns the relevant code area.
 - Name every worker thread as `WORKER <lane-id> - <short work name>` and handle Codex thread provisioning delays through `references/thread-lifecycle.md`.
 - Capture worker thread create-response correlation fields immediately so the orchestrator can resolve and message the worker it just created. Pending worktree handles are correlation fields, not thread ids.
 - Create compact worker heartbeats and a main orchestrator heartbeat when work continues beyond the current turn.
@@ -149,6 +154,7 @@ When running `/orchestrate`:
 - Run `ce-code-review` or equivalent review subagents after implementation and before shipping. Use machine-readable review mode when available so the orchestrator can apply or route findings.
 - Use `ce-commit-push-pr` for shipping when the branch is ready.
 - Use `references/uat-merge-policy.md` before combined or hybrid UAT, integration branches, merge stacks, and cleanup.
+- For persistent workers, the orchestrator owns checkpoint PR timing; workers normally commit or hand off verified slices but do not open per-slice PRs.
 - Notify the UAT thread when a PR is ready for user validation.
 - Delete the main orchestrator heartbeat after successful UAT handoff unless active implementation lanes remain; use a separate UAT follow-up heartbeat only when policy requires continued watching.
 - Watch checks when policy requires it, then merge only under explicit user or setup policy.
@@ -167,11 +173,11 @@ When running `/orchestrator:recover`:
 
 When running `/orchestrator:cleanup`:
 
-- Read `references/cleanup.md`.
+- Read `references/cleanup.md` and `references/persistent-workers.md`.
 - Clean only completed, merged, canceled, or explicitly deferred orchestration residue.
 - Delete matching heartbeat automations and stale UAT follow-ups.
-- Remove clean/safe worker worktrees and delete merged local/remote worker branches when evidence proves they are safe.
-- Archive completed worker threads only. Never archive `ORCHESTRATOR`, `INTAKE`, or `UAT`.
+- Remove clean/safe ephemeral worker worktrees and delete merged local/remote ephemeral worker branches when evidence proves they are safe.
+- Archive completed ephemeral worker threads only. Never archive `ORCHESTRATOR`, `INTAKE`, `UAT`, or active persistent workers.
 - Update the private ledger and report anything skipped because it was ambiguous or unsafe.
 
 ## Doctor Responsibilities
@@ -213,6 +219,7 @@ When running `/orchestrator:update`:
 - `references/uat.md` - `/orchestrator:uat` PR acceptance testing behavior.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
 - `references/parallel-orchestration.md` - dependency-aware parallel worktree and worker policy.
+- `references/persistent-workers.md` - long-lived area-owning worker threads/worktrees and checkpoint PR policy.
 - `references/thread-lifecycle.md` - thread creation wait behavior, stable titles, and worker naming.
 - `references/recover.md` - `/orchestrator:recover` state reconstruction and repair behavior.
 - `references/cleanup.md` - `/orchestrator:cleanup` completed-work residue removal.

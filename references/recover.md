@@ -24,6 +24,7 @@ Classify each unit/lane:
 - `lost-thread`: ledger references a thread that cannot be read.
 - `lost-automation`: heartbeat is missing or points at stale state.
 - `ledger-live-drift`: ledger says a lane is still implementing, but live git/thread/automation state shows commits, diffs, unread worker output, or missing heartbeats.
+- `persistent-worker-drift`: a persistent worker's branch, heartbeat, thread, area ownership, or integrated-through checkpoint does not match the ledger.
 - `blocked`: needs user/tool/auth decision.
 - `unsafe`: state is contradictory or destructive cleanup could lose work.
 
@@ -37,6 +38,8 @@ Allowed when policy is known:
 - Delete a lingering main heartbeat when the unit has already been handed to UAT and no active worker lanes remain.
 - Mark a missing active heartbeat as `lost-automation` and continue evidence collection from the worker thread/branch before deciding whether to recreate or delete it.
 - Mark missing worker evidence as unverified.
+- Mark a completed persistent worker slice `available` after evidence is captured; do not archive/delete the worker unless it is explicitly retired.
+- Recreate or update a persistent worker heartbeat only after confirming the worker should remain assigned, blocked, or watched.
 - Recreate a compact main heartbeat for active work.
 - Notify UAT for a ready PR when policy already says to notify.
 - Rename setup threads back to `ORCHESTRATOR`, `INTAKE`, and `UAT`.

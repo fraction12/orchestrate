@@ -28,7 +28,7 @@ Continue orchestrating <unit-id> for <repo-name>.
 Read the private ledger at <ledger-location>. First reconcile ledger state against live automations, worker branches/worktrees, PRs/checks, UAT, blockers, and known thread ids. Treat branch commits/diffs, idle worker threads with unread turns, missing automations, and name/id mismatches as state changes to verify, not as failures. Move only safe next actions. If a PR is ready, notify UAT with the PR packet. If policy is missing or a drift stop is hit, ask one blocking question. Update the ledger before finishing.
 ```
 
-Worker payloads must include lane id, expected branch/worktree, source plan or issue, verification gates, and the final evidence fields. Do not paste full plans into automations.
+Worker payloads must include lane id or persistent area id, expected branch/worktree, source plan or issue, verification gates, lifecycle mode, and the final evidence fields. Do not paste full plans into automations.
 
 ## Creation Rules
 
@@ -46,7 +46,7 @@ Record in the ledger:
 - `lastSeenAt`
 - `status`
 
-Do not create duplicate heartbeats for the same active unit/lane. Update the existing automation when cadence or payload changes.
+Do not create duplicate heartbeats for the same active unit/lane or persistent area worker. Update the existing automation when cadence or payload changes.
 
 ## Status Recovery
 
@@ -64,7 +64,14 @@ During every main heartbeat, perform this same reconciliation before sending new
 
 ## Deletion Rules
 
-Delete worker heartbeats after the lane is integrated, canceled, or explicitly parked with no wakeup required.
+Delete worker heartbeats after an ephemeral lane is integrated, canceled, or explicitly parked with no wakeup required.
+
+For persistent workers, do not delete the heartbeat merely because one slice finished. Keep, pause, or delete it according to worker state:
+
+- `assigned` or `blocked`: keep the heartbeat active unless policy says to park.
+- `available`: pause/delete only when no wakeup is needed and the main orchestrator will assign future work.
+- `parked`: pause or delete according to the recorded resume condition.
+- `retired`: delete after retirement safety checks pass.
 
 Delete the main heartbeat immediately after the orchestrator successfully hands the ready PR or integration PR to the UAT thread, unless there are still active worker lanes that require main orchestration. Once work is in UAT, do not leave the main heartbeat lingering as a generic monitor.
 

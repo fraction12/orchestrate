@@ -19,6 +19,8 @@ Stand by as the implementation worker for <repo>/<ticket-or-slice>.
 
 Expected thread title: WORKER <lane-id> - <short work name>
 Lane id: <lane-id>
+Lifecycle: <ephemeral lane or persistent area worker>
+Owned area/surfaces: <owned surfaces when persistent>
 
 Read:
 - AGENTS.md or repo instructions
@@ -62,6 +64,7 @@ Scope:
 Branch and PR policy:
 - Branch: <branch expectation>
 - You may <commit/push/open PR/handoff only>.
+- Persistent worker policy: if this is a persistent area worker, do not open individual PRs unless ORCHESTRATOR explicitly asks; hand off verified slices for orchestrator checkpoint PRs.
 - Do not merge to main.
 
 Verification expected:
@@ -90,7 +93,7 @@ Final handoff must include:
 ```text
 Continue <ticket/slice> in this worker thread.
 
-Stay inside scope from <plan/issue>. Keep the branch/worktree policy. Run the agreed verification. If ready, hand off or open the expected PR according to policy. If blocked, report the exact blocker and whether it blocks only this lane or the whole orchestration unit. Notify the Main Orchestrator when done, blocked, or needing a decision, and include the heartbeat name so it can be deleted.
+Stay inside scope from <plan/issue>. Keep the branch/worktree and lifecycle policy. Run the agreed verification. If ready, hand off or open the expected PR according to policy. Persistent workers should normally hand off verified slices and remain available for the next assignment rather than opening PRs or expecting cleanup. If blocked, report the exact blocker and whether it blocks only this lane or the whole orchestration unit. Notify the Main Orchestrator when done, blocked, or needing a decision, and include the heartbeat name plus whether it should be deleted, paused, or kept.
 ```
 
 ## Main Orchestrator Heartbeat Prompt
@@ -98,7 +101,7 @@ Stay inside scope from <plan/issue>. Keep the branch/worktree policy. Run the ag
 ```text
 Continue orchestrating <unit>.
 
-Read the private ledger and repo contract. First reconcile live state: actual automations by recorded id, worker branch/worktree commits or diffs, PRs/checks, UAT state, blockers, and ledger-known thread ids. Treat missing worker heartbeats, automation name/id mismatches, branch commits, dirty diffs, and idle worker threads with unread turns as state to verify and record before prompting workers. Keep moving safe lanes. When a PR is ready, notify the UAT thread with PR URL, scope, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. After successful UAT handoff, delete this main heartbeat unless active worker lanes remain; create/update the separate UAT follow-up heartbeat only if policy requires continued watching. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
+Read the private ledger and repo contract. First reconcile live state: actual automations by recorded id, persistent worker pool, worker branch/worktree commits or diffs, PRs/checks, UAT state, blockers, and ledger-known thread ids. Treat missing worker heartbeats, automation name/id mismatches, branch commits, dirty diffs, and idle worker threads with unread turns as state to verify and record before prompting workers. Reuse persistent area workers before creating new workers when policy enables them. Keep moving safe lanes. When a checkpoint or PR is ready, notify the UAT thread with PR URL, scope, included worker areas/commits, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. After successful UAT handoff, delete this main heartbeat unless active worker lanes remain; create/update the separate UAT follow-up heartbeat only if policy requires continued watching. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
 ```
 
 ## Automation Payload

@@ -20,6 +20,7 @@ This is a visible entrypoint for the canonical `$orchestrate` cleanup route.
 ## Guardrails
 
 - Clean only completed, merged, canceled, or explicitly deferred orchestration residue.
-- Delete safe heartbeats/automations, clean worker worktrees, delete merged worker branches, and archive completed worker threads.
+- Delete safe heartbeats/automations, clean ephemeral worker worktrees, delete merged ephemeral worker branches, and archive completed ephemeral worker threads.
+- Preserve persistent worker threads/worktrees/branches unless the campaign ended, the worker is retired, or the user explicitly asks to clean them.
 - Never archive, delete, rename, or recreate `ORCHESTRATOR`, `INTAKE`, or `UAT`.
 - Ask before cleaning ambiguous state, dirty worktrees, unmerged branches, or threads not known to be worker threads.

@@ -72,6 +72,7 @@ If readiness is missing:
 If using CE skills during readiness, read `ce-subroutine-contract.md` first. The orchestrator owns the tail: CE planning can create or enrich the plan, but worker launch, review routing, UAT notification, merge policy, and cleanup stay with `/orchestrate`.
 
 Read `parallel-orchestration.md` before deciding concurrency.
+Read `persistent-workers.md` before deciding whether to create or reuse campaign workers.
 
 ## Phase 2: Plan Or Campaign Contract
 
@@ -93,13 +94,14 @@ Campaign:
 
 - Create or update a durable campaign doc or issue state.
 - Define scoreboard/backlog boundary, current slice selection rule, stop/continue rules, and status cadence.
+- Decide whether the campaign uses persistent area workers. If policy says `persistent-campaign-workers`, build or refresh the worker pool before creating new worker threads.
 - Keep automation prompt compact and point to the campaign state.
 - Keep each loop iteration PR-sized and traceable to the campaign boundary. Update the ledger rather than editing plan progress checkboxes.
 - Use parallel workers for independent campaign slices whenever dependency and env limits allow.
 
 ## Phase 3: Worker Launch
 
-Use visible Codex worker threads for PR-bound implementation when available.
+Use visible Codex worker threads for implementation when available. A worker may be ephemeral for one lane or persistent for an area/campaign, depending on setup/run policy.
 
 Read `thread-lifecycle.md` before creating worker threads. Every worker thread must have an intended title:
 
@@ -109,16 +111,17 @@ WORKER <lane-id> - <short work name>
 
 Launch pattern:
 
-1. Create worker thread/worktree in standby.
-2. Immediately capture every correlation field from the create response: `threadId`, `pendingThreadId`, `pendingWorktreeId`, queued id, create timestamp, expected worker title, lane id, issue/plan terms, branch/worktree, and seed prompt summary.
-3. If thread id is not immediately available, wait 60 seconds and use `thread-lifecycle.md` bounded worker resolution. Do not use broad thread listing. Do not treat pending worktree handles as thread ids.
-4. Rename the worker thread to its intended `WORKER ...` title when the id is available.
-5. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
-6. Orchestrator checks worker cwd and worktree env readiness.
-7. Run repo setup script or configured env setup from the orchestrator side when needed.
-8. Send the real implementation prompt.
-9. Create worker heartbeat if the work may continue beyond the current turn.
-10. Record thread id or pending id, thread title, title status, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
+1. Check the persistent worker pool when policy enables it. Reuse a matching area worker when it owns the surface and is safe to reprompt.
+2. Create worker thread/worktree in standby only when no reusable worker exists or the lifecycle mode is ephemeral.
+3. Immediately capture every correlation field from the create response: `threadId`, `pendingThreadId`, `pendingWorktreeId`, queued id, create timestamp, expected worker title, lane id or area id, issue/plan terms, branch/worktree, and seed prompt summary.
+4. If thread id is not immediately available, wait 60 seconds and use `thread-lifecycle.md` bounded worker resolution. Do not use broad thread listing. Do not treat pending worktree handles as thread ids.
+5. Rename the worker thread to its intended `WORKER ...` title when the id is available.
+6. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
+7. Orchestrator checks worker cwd and worktree env readiness.
+8. Run repo setup script or configured env setup from the orchestrator side when needed.
+9. Send the real implementation prompt or reprompt packet.
+10. Create or update worker heartbeat if the work may continue beyond the current turn.
+11. Record thread id or pending id, thread title, title status, worktree, branch, issue, heartbeat, lifecycle mode, area ownership, and expected deliverable in the ledger.
 
 Before creating heartbeats, read `automation-lifecycle.md`. Reuse or update matching automations instead of creating duplicates.
 
@@ -139,6 +142,7 @@ Worker prompt must include:
 - Verification commands.
 - Evidence strategy expected for behavior-bearing work.
 - Whether it may commit, push, open PR, or only hand off.
+- Whether the worker is ephemeral or persistent. Persistent workers must keep area context and normally must not open PRs; they report verified slices for orchestrator checkpoint PRs.
 - Final handoff shape: changed files, behavior-change signal, tests inspected, tests added/changed/used unchanged, red failure or characterization evidence when applicable, verification run, no-test exception reason when applicable, commit/PR, blockers, residual risk.
 
 ## Phase 4: Watch And Unblock
@@ -201,16 +205,16 @@ After PR:
 - If policy requires continued watch after UAT handoff, create or update the separate UAT follow-up heartbeat; do not keep the main heartbeat alive as a UAT monitor.
 - Watch CI/checks when policy requires it.
 - Merge only under explicit policy.
-- For combined or hybrid UAT, decide whether this PR is individually testable, part of an integration branch, or waiting for final combined test. Record that state in the ledger.
+- For combined or hybrid UAT, decide whether this PR is individually testable, part of an integration branch, a persistent-worker checkpoint PR, or waiting for final combined test. Record that state in the ledger.
 
 ## Phase 7: Cleanup
 
 After merge, cancellation, or explicit deferral:
 
-- Read `references/cleanup.md` and follow the `/orchestrator:cleanup` safety gates for completed lanes.
+- Read `references/cleanup.md` and `references/persistent-workers.md`, then follow the `/orchestrator:cleanup` safety gates for completed lanes.
 - Delete worker heartbeat.
-- Remove clean/safe worktree.
-- Archive worker thread.
+- Remove clean/safe ephemeral worktree. Preserve persistent worker worktrees unless the campaign ended, the worker is retired, or the user explicitly asks.
+- Archive ephemeral worker thread. Preserve persistent worker threads; mark them `available`, `parked`, or `retired` in the ledger.
 - Update issue tracker state.
 - Update campaign doc or ledger.
 - Keep branch cleanup separate unless user/policy explicitly says to delete local/remote branches.

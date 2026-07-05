@@ -27,6 +27,7 @@ Read:
 - `private-ledger.md` before deciding where state belongs.
 - `thread-lifecycle.md` before creating or renaming threads.
 - `parallel-orchestration.md` before asking concurrency/worktree questions.
+- `persistent-workers.md` before asking worker lifecycle questions.
 
 Determine:
 
@@ -46,10 +47,11 @@ Use `blocking-questions.md`. Ask one setup question at a time:
 
 1. Final UAT policy.
 2. Worktree environment setup.
-3. QA policy.
-4. Heartbeat cadence.
-5. PR shipping authority.
-6. Max safe parallel worker count and shared resource limits.
+3. Worker lifecycle.
+4. QA policy.
+5. Heartbeat cadence.
+6. PR shipping authority.
+7. Max safe parallel worker count and shared resource limits.
 
 If Final UAT is combined or hybrid and repo policy does not already define integration behavior, also ask Combined UAT Strategy.
 
@@ -155,6 +157,7 @@ Minimum state shape:
   "policies": {
     "finalUat": "hybrid",
     "worktreeEnv": "repo-setup-script",
+    "workerLifecycle": "persistent-campaign-workers",
     "qa": "standard",
     "workerHeartbeat": "5m",
     "mainHeartbeat": "10m",

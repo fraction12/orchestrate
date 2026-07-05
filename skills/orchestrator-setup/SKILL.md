@@ -1,6 +1,6 @@
 ---
 name: orchestrator-setup
-description: Set up the Orchestrate operating model for a repository after verifying the Compound Engineering skill set is installed. Requires CE; stop and request/install CE if missing. Use when the user invokes /orchestrator:setup, /ochestrator:setup, asks to configure a Main Orchestrator with Intake and UAT threads, wants repo orchestration policy captured, or needs private ledger, heartbeat, worktree, QA, UAT, and merge defaults established before running /orchestrate.
+description: Set up the Orchestrate operating model for a repository after verifying the Compound Engineering skill set is installed. Requires CE; stop and request/install CE if missing. Use when the user invokes /orchestrator:setup, /ochestrator:setup, asks to configure a Main Orchestrator with Intake and UAT threads, wants repo orchestration policy captured, or needs private ledger, heartbeat, worker lifecycle, worktree, QA, UAT, and merge defaults established before running /orchestrate.
 ---
 
 # Orchestrator Setup

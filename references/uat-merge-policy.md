@@ -30,6 +30,13 @@ Choose the safest available option:
 2. Temporary local merge stack: merge candidate branches locally for verification without pushing, then reset/clean up after reporting.
 3. Sequential individual PR validation: use only when branches cannot be combined safely; label this as a limitation.
 
+Persistent worker checkpoint PR:
+
+- Use when persistent workers have accumulated verified slices and the orchestrator decides a meaningful checkpoint is ready.
+- The orchestrator creates the checkpoint/integration branch or PR; persistent workers normally do not open individual PRs.
+- The PR packet lists included worker areas, commits/diffs, verification, unresolved blockers, and residual risk.
+- After UAT/merge, mark each included persistent worker integrated through the merged commit, then keep the worker available unless the campaign is ending.
+
 Ask one blocking question when policy does not specify which combined strategy to use and more than one is viable.
 
 ## Integration Branch Rules

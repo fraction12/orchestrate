@@ -62,6 +62,7 @@ Minimum top-level fields:
 - `automations`
 - `activeUnits`
 - `completedUnits`
+- `persistentWorkers` when persistent worker lifecycle is enabled
 
 Preserve unknown fields when updating. When the skill expects a newer schema, migrate forward in memory, write a `.bak` copy, then write the upgraded state.
 
@@ -73,6 +74,23 @@ For every active lane, preserve reconciliation fields when known:
 - `workerEvidenceState` such as `missing`, `worker-reported`, `needs-collection`, `verified`, or `incomplete`
 - `automationStatus` such as `active`, `lost`, `stale`, `orphaned`, or `unknown`
 - `lastReconciledAt`
+- `workerLifecycle` such as `ephemeral-lane` or `persistent-area`
+- `areaId` and `ownedSurfaces` for persistent workers
+
+For every persistent worker, record:
+
+- `areaId`
+- `threadId`
+- `threadTitle`
+- `worktree`
+- `branch`
+- `ownedSurfaces`
+- `excludedSurfaces`
+- `state`: `available`, `assigned`, `blocked`, `parked`, or `retired`
+- `currentSlice`
+- `heartbeatId`
+- `lastReconciledAt`
+- `integratedThroughCommit` when a checkpoint PR has absorbed its work
 
 ## Worker Thread Correlation
 

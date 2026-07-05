@@ -9,10 +9,13 @@ During `/orchestrator:setup`, record:
 - Max concurrent workers.
 - Worktree env setup policy.
 - Whether worker worktrees may run package install/dev servers.
+- Worker lifecycle mode: ephemeral lanes, persistent campaign workers, or ask per run.
 - Shared resource limits: ports, databases, API quotas, browser sessions, simulators.
 - Preferred lane branch naming.
 
 Recommended default: up to three parallel workers when dependencies and resource limits are clean.
+
+Read `persistent-workers.md` when worker lifecycle is `persistent-campaign-workers` or `ask-per-run`.
 
 ## Ticket Sets
 
@@ -22,7 +25,7 @@ Before dispatch:
 
 1. Build an inventory of tickets, plans, files/surfaces, dependencies, and verification gates.
 2. Group lanes into dependency layers.
-3. Run independent lanes in parallel worktrees/workers up to the setup concurrency limit.
+3. Run independent lanes in parallel worktrees/workers up to the setup concurrency limit; reuse existing persistent area workers before creating new workers when policy enables them.
 4. Serialize lanes that share files, migrations, public APIs, shared state, singleton env resources, or unclear ownership.
 5. Recompute the next layer after each merge or blocker.
 
@@ -65,6 +68,8 @@ Each parallel worker must receive:
 - Tail policy.
 
 The orchestrator integrates in dependency order. Workers do not merge.
+
+When persistent workers are enabled, workers usually do not open PRs. They commit or hand off verified area slices; the orchestrator creates checkpoint PRs when a meaningful integrated slice is ready for UAT.
 
 ## Abort Parallelism
 

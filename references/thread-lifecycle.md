@@ -92,7 +92,7 @@ These three setup threads are persistent. Setup, execution, cleanup, status, and
 
 Persistent does not mean immortal. If the user manually archived one of these setup threads, treat it as no longer usable and create a replacement during setup.
 
-Worker threads must be named for the work they own:
+Worker threads must be named for the work or area they own:
 
 ```text
 WORKER <lane-id> - <short work name>
@@ -103,8 +103,12 @@ Examples:
 - `WORKER NEP-42 - Workspace Filters`
 - `WORKER U3 - Mock Fixture Split`
 - `WORKER CAM-2 - API Cleanup`
+- `WORKER shell - App Shell`
+- `WORKER diagrams - TLDraw Diagrams`
 
 Keep titles short enough to scan in the Codex sidebar. Do not include secrets, local paths, private thread ids, or long issue descriptions.
+
+Persistent workers keep the same area title across multiple slices. Do not rename a persistent worker for each ticket unless its area ownership changes.
 
 ## Title Status
 
@@ -125,6 +129,8 @@ Each worker lane should record:
 - `titleStatus`
 - `pendingThreadId` when applicable
 - `laneId`
+- `areaId` when persistent
+- `workerLifecycle`: `ephemeral-lane` or `persistent-area`
 - `source`
 - `branch`
 - `worktree`
