@@ -5,6 +5,7 @@
 ## Contents
 
 - Phase 1: Inspect
+- Phase 1A: Compound Engineering Gate
 - Phase 2: Ask Required Questions
 - Phase 3: Create Threads
 - Phase 4: Rename Threads
@@ -22,6 +23,7 @@ Read:
 - `.compound-engineering/config.local.yaml` if present.
 - `package.json`, task config, CI config, and existing `docs/plans/` conventions when relevant.
 - Existing private orchestration ledger if present.
+- `compound-engineering-dependency.md` before creating threads or writing setup state.
 - `private-ledger.md` before deciding where state belongs.
 
 Determine:
@@ -31,6 +33,10 @@ Determine:
 - Whether worktree setup already exists.
 - Whether issue tracker tools are available.
 - Whether thread tools and automation tools are available.
+
+## Phase 1A: Compound Engineering Gate
+
+Read `compound-engineering-dependency.md` and verify required CE skills. If any required skill is missing, stop setup before asking policy questions, creating threads, renaming threads, or writing the private ledger. Request/install Compound Engineering when the platform supports it, otherwise tell the user to install it and restart Codex.
 
 ## Phase 2: Ask Required Questions
 

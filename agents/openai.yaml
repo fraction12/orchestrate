@@ -1,4 +1,4 @@
 interface:
   display_name: "Orchestrator: Orchestrate"
-  short_description: "Run ticket sets through agent orchestration"
+  short_description: "Run CE-backed ticket orchestration"
   default_prompt: "Use $orchestrate to run this ticket through planning, workers, review, PR, UAT, and cleanup."

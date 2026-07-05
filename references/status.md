@@ -13,6 +13,7 @@
 ## Source Order
 
 Read `private-ledger.md` and `automation-lifecycle.md` before reconstructing status.
+Read `compound-engineering-dependency.md` and report CE availability, but do not block status if CE is missing.
 
 1. Private orchestration ledger.
 2. Active Codex threads for the repo.
@@ -30,6 +31,7 @@ Report by orchestration unit.
 
 For a single ticket:
 
+- Compound Engineering availability.
 - Ticket/plan.
 - Source plan readiness and covered unit/requirement IDs.
 - Worker thread and branch.
@@ -85,6 +87,7 @@ Orchestration status: <unit name>
 
 Verified:
 - <facts verified from ledger/git/PR/thread>
+- Compound Engineering: <available/missing, missing required skills if any>
 
 Inferred/Stale/Missing:
 - <facts reconstructed or unavailable, with source checked>

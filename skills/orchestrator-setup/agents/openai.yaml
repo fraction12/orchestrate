@@ -1,4 +1,4 @@
 interface:
   display_name: "Orchestrator: Setup"
-  short_description: "Set up orchestrator threads and policy"
+  short_description: "Set up CE-backed orchestration"
   default_prompt: "Use $orchestrator-setup to configure the Main Orchestrator, Intake, UAT, ledger, and policies for this repo."

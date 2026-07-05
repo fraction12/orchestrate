@@ -1,6 +1,6 @@
 ---
 name: orchestrate
-description: Run coding orchestration for one ticket, a ticket set, or a campaign through requirements intake, CE planning, worker execution, review subagents, PR creation, UAT, merge policy, automation, status, and cleanup. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, asks to orchestrate ready Linear/GitHub tickets, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
+description: Run coding orchestration for one ticket, a ticket set, or a campaign through Compound Engineering requirements intake, CE planning, worker execution, review subagents, PR creation, UAT, merge policy, automation, status, and cleanup. Requires the Compound Engineering skill set; stop and request/install CE if missing. Use when the user invokes /orchestrate, /orchestrator:setup, /orchestrator:status, asks to orchestrate ready Linear/GitHub tickets, asks to run multiple worktree workers, wants a main orchestrator/intake/UAT thread system, or wants Codex automations to keep agent work moving without losing review and cleanup discipline.
 ---
 
 # Orchestrate
@@ -8,6 +8,8 @@ description: Run coding orchestration for one ticket, a ticket set, or a campaig
 This skill makes the active agent behave as a persistent engineering lead: it owns orchestration state, asks blocking policy questions before dispatch, creates and monitors workers, verifies claims, routes PRs to UAT, and cleans up completed work.
 
 Use repo instructions when present, especially `ORCHESTRATOR.md` and `AGENTS.md`. If no repo orchestration contract exists, use the baked-in defaults here without exposing them publicly. Setup can offer to write repo docs, but `/orchestrate` must work cold.
+
+This skill requires Compound Engineering. Before `/orchestrator:setup` or `/orchestrate`, read `references/compound-engineering-dependency.md` and verify the required CE skills are available. If CE is missing, stop and request/install the Compound Engineering plugin or tell the user how to install it. Do not proceed with an ad hoc orchestration substitute.
 
 ## Command Router
 
@@ -27,6 +29,7 @@ Normalize common aliases before routing:
 
 ## Non-Negotiables
 
+- Require Compound Engineering. Do not run setup or execution without the required CE skills available.
 - Use blocking questions as a first-class workflow gate. Do not start workers until required orchestration policy is known.
 - Ask one question at a time. Prefer single-select multiple choice when choosing a policy or next step.
 - In Codex, use the platform blocking question tool when available. If it is unavailable or errors, ask a numbered question in chat and wait for the answer.
@@ -77,6 +80,7 @@ Minimum execution questions:
 
 When running `/orchestrator:setup`:
 
+- Verify the Compound Engineering dependency first. If missing, stop for install.
 - Mark the current thread as the Main Orchestrator in private state.
 - Create an Intake thread on local `main` for Linear/ticket requirements, `ce-brainstorm`, and `ce-plan`.
 - Create a UAT thread on local `main` for PR acceptance testing and user-facing validation.
@@ -92,6 +96,7 @@ Use Codex thread tools when available. If they are not loaded, search for `creat
 
 When running `/orchestrate`:
 
+- Verify the Compound Engineering dependency first. If missing, stop for install.
 - Discover repo root, current branch, dirty state, existing plans, active issues, active worktrees, active threads, and active automations.
 - Classify the orchestration unit as a single ticket, ticket set, or campaign.
 - Ensure requirements are durable enough. If not, route to Intake or `ce-brainstorm`/`ce-plan` before implementation.
@@ -113,6 +118,7 @@ When running `/orchestrate`:
 When running `/orchestrator:status`:
 
 - Read private ledger first.
+- Check and report Compound Engineering dependency availability.
 - If no ledger exists, reconstruct from recent Codex threads, git worktrees, branches, PRs, issue tracker state, and automations.
 - Report by orchestration unit, not raw activity.
 - Include active workers, branches, worktrees, PRs, heartbeats, UAT state, blockers, verified evidence, skipped checks, and next action.
@@ -121,6 +127,7 @@ When running `/orchestrator:status`:
 ## References
 
 - `references/blocking-questions.md` - required question discipline and menus.
+- `references/compound-engineering-dependency.md` - required CE skills and install-gate behavior.
 - `references/setup.md` - `/orchestrator:setup` wizard and private state.
 - `references/execution.md` - `/orchestrate` lifecycle for single ticket, ticket set, and campaign.
 - `references/private-ledger.md` - private state location, repo id, locking, stale detection, and schema upgrades.

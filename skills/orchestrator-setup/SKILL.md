@@ -1,6 +1,6 @@
 ---
 name: orchestrator-setup
-description: Set up the Orchestrate operating model for a repository. Use when the user invokes /orchestrator:setup, /ochestrator:setup, asks to configure a Main Orchestrator with Intake and UAT threads, wants repo orchestration policy captured, or needs private ledger, heartbeat, worktree, QA, UAT, and merge defaults established before running /orchestrate.
+description: Set up the Orchestrate operating model for a repository after verifying the Compound Engineering skill set is installed. Requires CE; stop and request/install CE if missing. Use when the user invokes /orchestrator:setup, /ochestrator:setup, asks to configure a Main Orchestrator with Intake and UAT threads, wants repo orchestration policy captured, or needs private ledger, heartbeat, worktree, QA, UAT, and merge defaults established before running /orchestrate.
 ---
 
 # Orchestrator Setup
@@ -22,6 +22,7 @@ If the canonical `orchestrate` skill is missing, stop and tell the user to insta
 ## Guardrails
 
 - Ask required setup questions one at a time.
+- Require the canonical setup route to verify Compound Engineering before creating threads or writing setup state.
 - Do not create implementation workers during setup.
 - Rename setup threads to `ORCHESTRATOR`, `INTAKE`, and `UAT` through the canonical setup route.
 - Do not expose private thread ids, automation ids, or local env paths in public docs.

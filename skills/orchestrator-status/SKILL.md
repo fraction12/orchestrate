@@ -1,6 +1,6 @@
 ---
 name: orchestrator-status
-description: Report current or latest Orchestrate state for a repository. Use when the user invokes /orchestrator:status, /ochestrator:status, asks for orchestration status, wants active workers, PRs, UAT, heartbeats, blockers, ledger state, stale worktrees, or next orchestration actions summarized.
+description: Report current or latest Orchestrate state for a repository, including whether the required Compound Engineering skill set is available. Use when the user invokes /orchestrator:status, /ochestrator:status, asks for orchestration status, wants active workers, PRs, UAT, heartbeats, blockers, ledger state, stale worktrees, CE dependency state, or next orchestration actions summarized.
 ---
 
 # Orchestrator Status
@@ -22,6 +22,7 @@ If the canonical `orchestrate` skill is missing, stop and tell the user to insta
 ## Guardrails
 
 - Report by orchestration unit, not raw activity.
+- Report whether Compound Engineering is available or missing.
 - Label facts as verified, worker-reported, inferred, stale, or missing.
 - Do not present inferred or stale state as verified.
 - Do not start setup, implementation, merge, or cleanup work unless the user explicitly asks after status is reported.

@@ -5,6 +5,7 @@
 ## Contents
 
 - Phase 0: Resume Or Classify
+- Phase 0A: Compound Engineering Gate
 - Phase 1: Intake And Readiness
 - Phase 2: Plan Or Campaign Contract
 - Phase 3: Worker Launch
@@ -27,6 +28,10 @@ If no match exists, classify:
 - Campaign: an objective that should keep producing PR-sized chunks until complete, blocked, or stopped.
 
 If unclear, ask the Orchestration Unit blocking question.
+
+## Phase 0A: Compound Engineering Gate
+
+Read `compound-engineering-dependency.md` and verify required CE skills. If any required skill is missing, stop before planning, Intake handoff, worker creation, review, PR, UAT, or cleanup changes. Request/install Compound Engineering when the platform supports it, otherwise tell the user to install it and restart Codex.
 
 ## Phase 1: Intake And Readiness
 
