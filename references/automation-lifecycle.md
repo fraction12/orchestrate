@@ -61,11 +61,17 @@ For stale/orphaned automations, repair or delete only when policy allows. Otherw
 
 Delete worker heartbeats after the lane is integrated, canceled, or explicitly parked with no wakeup required.
 
+Delete the main heartbeat immediately after the orchestrator successfully hands the ready PR or integration PR to the UAT thread, unless there are still active worker lanes that require main orchestration. Once work is in UAT, do not leave the main heartbeat lingering as a generic monitor.
+
+If policy requires the orchestrator to watch UAT/checks after handoff, create or update a separate UAT follow-up automation named `orchestrator:<repo-name>:<unit-id>:uat`. Its payload must be limited to UAT/check status, merge-authority policy, and cleanup after UAT. Do not reuse the main heartbeat for this phase.
+
 Delete the main heartbeat only after:
 
 - all lanes are merged, canceled, or deferred;
 - UAT and merge policy are satisfied or explicitly skipped;
 - cleanup is complete or recorded as residual work;
 - the final status has been reported.
+
+This final-delete rule applies when the main heartbeat is still legitimately coordinating active implementation or integration lanes. A successful handoff to UAT is an earlier delete condition for the main heartbeat.
 
 Never stop a heartbeat solely because a worker says it is done.

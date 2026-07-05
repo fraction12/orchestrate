@@ -98,7 +98,7 @@ Stay inside scope from <plan/issue>. Keep the branch/worktree policy. Run the ag
 ```text
 Continue orchestrating <unit>.
 
-Read the private ledger and repo contract. Check active workers, PRs, UAT state, blockers, and heartbeats. Keep moving safe lanes. When a PR is ready, notify the UAT thread with PR URL, scope, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
+Read the private ledger and repo contract. Check active workers, PRs, UAT state, blockers, and heartbeats. Keep moving safe lanes. When a PR is ready, notify the UAT thread with PR URL, scope, verification evidence, visual/browser evidence when relevant, and concrete user-test prompts. After successful UAT handoff, delete this main heartbeat unless active worker lanes remain; create/update the separate UAT follow-up heartbeat only if policy requires continued watching. Do not merge or cleanup unless policy allows. Keep the heartbeat compact; durable state belongs in the ledger, issue tracker, or campaign doc.
 ```
 
 ## Automation Payload

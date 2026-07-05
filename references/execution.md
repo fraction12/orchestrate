@@ -183,6 +183,8 @@ After PR:
 
 - Notify UAT thread when policy says to.
 - Include PR URL, scope, verification evidence, visual/browser evidence when relevant, and suggested user checks.
+- After a successful UAT handoff, delete the main orchestrator heartbeat for this unit unless other worker lanes remain active.
+- If policy requires continued watch after UAT handoff, create or update the separate UAT follow-up heartbeat; do not keep the main heartbeat alive as a UAT monitor.
 - Watch CI/checks when policy requires it.
 - Merge only under explicit policy.
 - For combined or hybrid UAT, decide whether this PR is individually testable, part of an integration branch, or waiting for final combined test. Record that state in the ledger.

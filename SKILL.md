@@ -144,6 +144,7 @@ When running `/orchestrate`:
 - Use `ce-commit-push-pr` for shipping when the branch is ready.
 - Use `references/uat-merge-policy.md` before combined or hybrid UAT, integration branches, merge stacks, and cleanup.
 - Notify the UAT thread when a PR is ready for user validation.
+- Delete the main orchestrator heartbeat after successful UAT handoff unless active implementation lanes remain; use a separate UAT follow-up heartbeat only when policy requires continued watching.
 - Watch checks when policy requires it, then merge only under explicit user or setup policy.
 - Clean up after merge, cancellation, or deferral.
 

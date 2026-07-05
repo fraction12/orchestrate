@@ -32,6 +32,7 @@ Allowed when policy is known:
 
 - Update ledger from verified PR/branch/UAT state.
 - Delete orphaned heartbeats for completed/canceled lanes.
+- Delete a lingering main heartbeat when the unit has already been handed to UAT and no active worker lanes remain.
 - Mark missing worker evidence as unverified.
 - Recreate a compact main heartbeat for active work.
 - Notify UAT for a ready PR when policy already says to notify.

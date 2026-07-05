@@ -79,6 +79,7 @@ Never present worker-reported, inferred, stale, or missing status as verified.
 When status reveals stale state:
 
 - If a worker heartbeat exists for a completed/canceled worker, delete it only when cleanup policy allows; otherwise recommend deletion.
+- If the main heartbeat still exists after a verified UAT handoff and no worker lanes remain active, classify it as orphaned and route to recover/delete under policy.
 - If a clean completed worktree remains after merge, ask or clean it according to policy.
 - If a PR is merged but local cleanup failed, verify remote state before retrying cleanup.
 - If a branch is conflicted, check whether it still has unique diff before spending time on conflict repair.
