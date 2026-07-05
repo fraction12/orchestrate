@@ -10,11 +10,22 @@ After a create/fork request:
 
 1. If a thread id is returned, record it and continue.
 2. If only pending state is returned, or no usable id is visible, wait 60 seconds before declaring failure.
-3. After the wait, search/list/read recent repo threads once to resolve the created thread by repo, title, seed prompt, or pending worktree id.
-4. Retry title setting once after the id is resolved.
-5. If still unresolved, record the thread as `pending` in the private ledger with the pending id or evidence, and report the exact recovery step.
+3. After the wait, do not call broad `list_threads`. Record the thread as `pending` in the private ledger with the pending id, seed title, seed prompt summary, pending worktree id, and timestamp.
+4. Retry title setting only when a concrete thread id becomes available from a create response, explicit user-provided id, or later direct tool result.
+5. Report the exact recovery step: use `/orchestrator:doctor` or provide the thread id manually after Codex finishes provisioning it.
 
-Do not burn repeated agent turns polling newly-created threads. Use one deliberate wait and one focused lookup.
+Do not burn repeated agent turns polling newly-created threads. Do not use broad thread listing as a recovery mechanism.
+
+## Thread Listing Safety
+
+Avoid broad `list_threads` in setup, execution, cleanup, status, and recover. Use only:
+
+- thread ids already stored in the private ledger;
+- ids returned by `create_thread` or fork/create responses;
+- ids explicitly supplied by the user;
+- direct reads/sends/title updates against known ids.
+
+If the only way to find a thread would be broad listing, mark the thread state as `pending` or `unknown` and report the exact manual recovery step.
 
 ## Stable Titles
 

@@ -11,7 +11,7 @@ Read in order:
 3. `status.md`
 4. Git worktrees, branches, and remotes.
 5. PRs and CI/check state.
-6. Codex threads and automations.
+6. Ledger-known or user-provided Codex thread ids, plus automations.
 7. Issue tracker state.
 
 ## Recovery Classes
@@ -39,6 +39,7 @@ Allowed when policy is known:
 - Rename setup threads back to `ORCHESTRATOR`, `INTAKE`, and `UAT`.
 - Rename active worker threads to `WORKER <lane-id> - <short work name>` when lane ids and thread ids are known.
 - Route completed merged residue to `/orchestrator:cleanup` instead of mixing broad cleanup into recovery.
+- Do not broad-list Codex threads to reconstruct missing ids. If ids are missing, mark the thread relation as `unknown` and ask for direct ids or route to doctor.
 
 Ask before:
 

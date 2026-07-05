@@ -57,11 +57,13 @@ Do not create Intake/UAT threads until these policies are known, unless the user
 
 ## Phase 3: Create Or Identify Threads
 
-Use Codex thread tools. If not loaded, search for them. Include `set_thread_title`.
+Use Codex thread tools. If not loaded, search only for `create_thread`, `send_message_to_thread`, `set_thread_title`, and `automation_update`.
+
+Do not call broad `list_threads` during setup. Large or old Codex histories can make thread listing unstable. Setup must rely on the private ledger, create-thread return values, pending ids, or explicit user-provided thread ids.
 
 If thread tools are unavailable, do not fake thread creation. Record setup as partial, store the missing capability in the ledger, and tell the user that Intake/UAT routing will stay in the Main Orchestrator until tools are available.
 
-Read `thread-lifecycle.md`. If created Intake/UAT threads do not immediately return ids, wait 60 seconds, then perform one focused lookup before declaring creation failed.
+Read `thread-lifecycle.md`. If created Intake/UAT threads do not immediately return ids, wait 60 seconds, then record `pending` state instead of listing threads.
 
 Create or identify:
 
@@ -69,7 +71,7 @@ Create or identify:
 - Intake Thread: local `main`, same repo, no worktree. Purpose: task-tracker-agnostic requirements intake, `ce-brainstorm`, `ce-plan`, ticket/doc grooming.
 - UAT Thread: local `main`, same repo, no worktree. Purpose: PR acceptance testing, user validation, combined UAT, final approval notes.
 
-Before creating Intake or UAT, check the private ledger and recent Codex threads for existing usable setup threads. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT.
+Before creating Intake or UAT, check the private ledger and any explicit thread ids the user supplied for existing usable setup threads. If `ORCHESTRATOR`, `INTAKE`, and `UAT` already exist for this repo, reuse them, refresh their ledger entries, and skip thread creation. Later `/orchestrate` runs in the same Main Orchestrator thread must not recreate Intake or UAT.
 
 Thread prompts must be compact.
 
@@ -97,7 +99,7 @@ Rename threads immediately after creation or identification:
 - Intake Thread: `INTAKE`
 - UAT Thread: `UAT`
 
-Use `set_thread_title` when available. If title updates fail or the tool is unavailable, do not block setup. Record `titleStatus` as `failed`, `pending`, or `unavailable` in the ledger and include the fallback in the setup completion report.
+Use `set_thread_title` when available and the thread id is known. If a thread id is pending, title setting must stay pending too; do not list threads to find it. If title updates fail or the tool is unavailable, do not block setup. Record `titleStatus` as `failed`, `pending`, or `unavailable` in the ledger and include the fallback in the setup completion report.
 
 Avoid adding repo names, ticket numbers, or dates to these three setup thread titles. Their job is stable sidebar findability.
 
@@ -126,11 +128,13 @@ Minimum state shape:
     },
     "intake": {
       "id": "thread-id",
+      "pendingThreadId": null,
       "title": "INTAKE",
       "titleStatus": "set"
     },
     "uat": {
       "id": "thread-id",
+      "pendingThreadId": null,
       "title": "UAT",
       "titleStatus": "set"
     }
@@ -163,7 +167,7 @@ If one exists, offer to update it only when setup decisions materially change re
 
 Report:
 
-- Main, Intake, and UAT thread ids.
+- Main, Intake, and UAT thread ids, or pending state with the exact manual recovery step.
 - Thread titles and any title-setting fallback.
 - Policy decisions.
 - Ledger location.

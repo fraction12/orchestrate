@@ -110,7 +110,7 @@ WORKER <lane-id> - <short work name>
 Launch pattern:
 
 1. Create worker thread/worktree in standby.
-2. If thread id is not immediately available, wait 60 seconds and perform one focused lookup before treating creation as failed.
+2. If thread id is not immediately available, wait 60 seconds and record pending state instead of listing threads.
 3. Rename the worker thread to its intended `WORKER ...` title when the id is available.
 4. Worker reads repo instructions and reports cwd, branch, and relevant plan visibility.
 5. Orchestrator checks worker cwd and worktree env readiness.
@@ -120,6 +120,8 @@ Launch pattern:
 9. Record thread id or pending id, thread title, title status, worktree, branch, issue, heartbeat, and expected deliverable in the ledger.
 
 Before creating heartbeats, read `automation-lifecycle.md`. Reuse or update matching automations instead of creating duplicates.
+
+Do not call broad `list_threads` to discover worker threads. If a worker thread id remains pending, keep the lane in pending-thread state and continue only with safe non-thread actions.
 
 Do not make the worker hand-run setup as its first meaningful task when the orchestrator can prepare the worktree.
 

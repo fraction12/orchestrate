@@ -17,14 +17,14 @@ Read `private-ledger.md` and `automation-lifecycle.md` before reconstructing sta
 Read `compound-engineering-dependency.md` and report CE availability, but do not block status if CE is missing.
 
 1. Private orchestration ledger.
-2. Active Codex threads for the repo.
+2. Ledger-known or user-provided Codex thread ids for the repo.
 3. Active automations and heartbeats.
 4. Git worktrees and branches.
 5. Open PRs and CI/check status.
 6. Issue tracker state.
 7. Recent plans or campaign docs.
 
-If the ledger is missing or stale, reconstruct best effort and label each recovered fact.
+If the ledger is missing or stale, reconstruct best effort and label each recovered fact. Do not use broad `list_threads`; if thread state cannot be reconstructed from known ids, label it missing.
 
 ## Recovery, Cleanup, And Doctor Handoff
 

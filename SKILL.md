@@ -48,6 +48,7 @@ Normalize common aliases before routing:
 - Never silently default important policy: UAT shape, merge authority, worktree environment setup, QA depth, worker/main heartbeat cadence, and whether the unit is a single ticket, ticket set, or campaign.
 - Keep prompts compact and point workers to durable context. Do not stuff the whole project transcript into worker prompts or automations.
 - Keep private orchestration state private. Do not publish thread ids, heartbeat ids, internal blocker notes, or local env details in public docs or PR text unless the user explicitly wants that.
+- Do not use broad Codex thread listing as part of setup or routine orchestration. Use ledger-known, create-returned, or user-provided thread ids; if a thread id cannot be resolved safely, record it as pending instead of scanning all threads.
 - Treat worker claims as untrusted until checked against branch, diff, tests, PR metadata, CI, and visible behavior when relevant.
 - Do not merge, archive, delete worktrees, mark issues done, or stop heartbeats merely because a worker says it finished.
 - Carry plan alignment forward at every handoff. Every worker lane must know its source plan, unit IDs, requirement IDs, non-goals, drift stops, and verification gates.
@@ -95,7 +96,7 @@ When running `/orchestrator:setup`:
 
 - Verify the Compound Engineering dependency first. If missing, stop for install.
 - Mark the current thread as the Main Orchestrator in private state.
-- Reuse existing Main Orchestrator, Intake, and UAT threads from the private ledger or Codex thread lookup when they already exist. Do not recreate persistent setup threads for later `/orchestrate` runs in the same repo.
+- Reuse existing Main Orchestrator, Intake, and UAT threads from the private ledger, create responses, or explicit user-provided ids when they already exist. Do not recreate persistent setup threads for later `/orchestrate` runs in the same repo.
 - Create an Intake thread on local `main` for task-tracker-agnostic requirements intake, ticket/doc grooming, `ce-brainstorm`, and `ce-plan` only when no usable Intake thread exists.
 - Create a UAT thread on local `main` for PR acceptance testing and user-facing validation only when no usable UAT thread exists.
 - Rename the Main Orchestrator thread to `ORCHESTRATOR`, the Intake thread to `INTAKE`, and the UAT thread to `UAT` so the user can find them in the Codex app.
@@ -106,7 +107,7 @@ When running `/orchestrator:setup`:
 - Use `references/private-ledger.md` for repo id derivation, safe local-vs-CODEX_HOME storage, locking, stale detection, and schema upgrades.
 - Use `references/parallel-orchestration.md` to capture default parallelism policy and worktree/worker limits.
 
-Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `list_threads`, `read_thread`, `send_message_to_thread`, `set_thread_title`, `set_thread_archived`, and `automation_update`.
+Use Codex thread tools when available. If they are not loaded, search for `create_thread`, `send_message_to_thread`, `set_thread_title`, `set_thread_archived`, and `automation_update`. Do not search for or call broad `list_threads` during setup.
 
 ## Intake Responsibilities
 
@@ -186,7 +187,7 @@ When running `/orchestrator:status`:
 
 - Read private ledger first.
 - Check and report Compound Engineering dependency availability.
-- If no ledger exists, reconstruct from recent Codex threads, git worktrees, branches, PRs, issue tracker state, and automations.
+- If no ledger exists, reconstruct from git worktrees, branches, PRs, issue tracker state, automations, and only ledger-known or user-provided Codex thread ids. Do not broad-list all Codex threads.
 - Report by orchestration unit, not raw activity.
 - Include active workers, branches, worktrees, PRs, heartbeats, UAT state, blockers, verified evidence, skipped checks, and next action.
 - Label reconstructed facts as verified, inferred, stale, or missing. Do not present inferred state as verified.

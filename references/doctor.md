@@ -16,6 +16,7 @@ Run these checks:
 - Main, Intake, and UAT threads exist when setup has run.
 - Thread titles are `ORCHESTRATOR`, `INTAKE`, and `UAT`.
 - Worker threads for active lanes follow `WORKER <lane-id> - <short work name>` when their ids are available.
+- Doctor avoids broad `list_threads`; missing thread ids are reported as pending/manual recovery instead of scanning all Codex threads.
 - Cleanup command is installed and can be routed for completed residue.
 - Thread tools, automation tools, and `set_thread_title` availability.
 - Worktree env policy and concurrency policy are recorded.
